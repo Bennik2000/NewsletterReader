@@ -1,2 +1,2 @@
-
-export 'Newsletter.dart';
+export 'article.dart';
+export 'newsletter.dart';
