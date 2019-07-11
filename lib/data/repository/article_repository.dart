@@ -8,7 +8,11 @@ class ArticleRepository {
   ArticleRepository(this._database);
 
   Future<List<Article>> queryArticlesOfNewsletter(int newsletterId) async {
-    var rows = await _database.queryAllRows(ArticleEntity.tableName());
+    var rows = await _database.queryRows(
+      ArticleEntity.tableName(),
+      where: "newsletterId=?",
+      whereArgs: [newsletterId],
+    );
     var articles = new List<Article>();
 
     for (var row in rows) {
@@ -16,6 +20,17 @@ class ArticleRepository {
     }
 
     return articles;
+  }
+
+  Future<Article> queryLastArticleOfNewsletter(int newsletterId) async {
+    var rows = await _database.queryRows(ArticleEntity.tableName(),
+        where: "newsletterId=?", whereArgs: [newsletterId], orderBy: "releaseDate DESC", limit: 1);
+
+    for (var row in rows) {
+      return new ArticleEntity.fromMap(row).asArticle();
+    }
+
+    return null;
   }
 
   Future saveArticleForNewsletter(int newsletterId, Article article) async {
@@ -29,5 +44,9 @@ class ArticleRepository {
     } else {
       await _database.update(ArticleEntity.tableName(), row);
     }
+  }
+
+  Future saveArticle(Article article) async {
+    await saveArticleForNewsletter(article.newsletterId, article);
   }
 }

@@ -1,50 +1,63 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:newsletter_reader/data/filestorage/file_download_repository.dart';
+import 'package:http/http.dart' as http;
 import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/network/article_searcher.dart';
+import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/util/util.dart';
 
-class SameUrlArticleSearcher extends ArticleSearcher {
-  final FileDownloadRepository fileDownloadRepository = new FileDownloadRepository();
-  final Newsletter newsletter;
+import 'network_utils.dart';
 
-  SameUrlArticleSearcher(this.newsletter);
+class SameUrlArticleSearcher extends ArticleSearcher {
+  final Newsletter _newsletter;
+  final ArticleRepository _articleRepository;
+
+  SameUrlArticleSearcher(this._newsletter, this._articleRepository);
 
   @override
   Future<List<Article>> fetchNewArticles() async {
-    if (newsletter.updateStrategy != UpdateStrategy.SameUrl) {
+    if (_newsletter.updateStrategy != UpdateStrategy.SameUrl) {
       throw new InvalidArgumentException();
     }
 
-    var url = Uri.parse(newsletter.url);
+    Map<String, String> headers = {};
 
-    var request = await new HttpClient().getUrl(url);
-
-    var response = await request.close();
-
-    if (response.statusCode == HttpStatus.ok) {
-      var article =
-          new Article(isDownloaded: false, sourceUrl: url.toString(), newsletterId: newsletter.id, releaseDate: DateTime.now());
-
-      return <Article>[article];
+    var article = await _articleRepository.queryLastArticleOfNewsletter(_newsletter.id);
+    if (article?.releaseDate != null) {
+      headers.addAll({"If-Modified-Since": NetworkUtils.formatDateForHeader(article.releaseDate)});
     }
 
-    return <Article>[];
+    var response = await http.get(
+      // TODO: Use lower level http api. Now the complete article is downloaded only to test if a new article ist available.
+      _newsletter.url,
+      headers: headers,
+    );
 
-    var buffer = new StringBuffer();
+    String filename;
 
-    await response.transform(utf8.decoder).listen((d) {
-      buffer.write(d);
-    }).asFuture();
+    if (response.headers.containsKey("content-disposition")) {
+      var contentDisposition = response.headers["content-disposition"];
 
-    var directory = "newsletter_" + newsletter.id.toString();
+      RegExp regExp = new RegExp('filename[*]?=\\"(.*)\\"');
+      var matches = regExp.allMatches(contentDisposition).toList();
 
-    var file = await fileDownloadRepository.getFile(directory, DateTime.now().toIso8601String());
+      if (matches.length > 0) {
+        filename = matches[0].group(1);
+      }
+    }
 
-    await file.writeAsString(buffer.toString());
+    if (response.statusCode == HttpStatus.ok) {
+      var article = new Article(
+        isDownloaded: false,
+        sourceUrl: _newsletter.url.toString(),
+        newsletterId: _newsletter.id,
+        originalFilename: filename,
+        releaseDate: DateTime.now(), // TODO: Read release Date from headers
+      );
 
-    return null;
+      return [article];
+    }
+
+    return [];
   }
 }

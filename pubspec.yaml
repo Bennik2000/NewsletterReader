@@ -30,6 +30,9 @@ dependencies:
   kiwi: ^0.1.0
   provider: ^3.0.0
   intl: ^0.15.8
+  http: ^0.12.0+2
+  flare_flutter: 1.0.2
+  open_file: ^2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +50,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/flare/article_placeholder_0.flr
+    - assets/flare/article_placeholder_1.flr
+    - assets/flare/article_placeholder_2.flr
+    - assets/flare/steaming_tea.flr
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

@@ -41,6 +41,31 @@ class DatabaseAccess {
     return await db.query(table);
   }
 
+  Future<List<Map<String, dynamic>>> queryRows(String table,
+      {bool distinct,
+      List<String> columns,
+      String where,
+      List<dynamic> whereArgs,
+      String groupBy,
+      String having,
+      String orderBy,
+      int limit,
+      int offset}) async {
+    Database db = await _database;
+    return await db.query(
+      table,
+      distinct: distinct,
+      columns: columns,
+      where: where,
+      whereArgs: whereArgs,
+      groupBy: groupBy,
+      having: having,
+      orderBy: orderBy,
+      limit: limit,
+      offset: offset,
+    );
+  }
+
   Future<int> queryRowCount(String table) async {
     Database db = await _database;
     return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table'));

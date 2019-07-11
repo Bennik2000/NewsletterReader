@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/data/model/model.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/load_articles_bloc.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/article_card.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_list.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_page_background.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_title.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/last_update_information.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/no_articles_empty_state.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/widget/update_articles_button.dart';
 import 'package:provider/provider.dart';
 
 class NewsletterArticlesPage extends StatefulWidget {
@@ -20,17 +20,9 @@ class NewsletterArticlesPage extends StatefulWidget {
 }
 
 class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
-  final LoadArticlesBloc _loadArticlesBloc;
   final Newsletter _newsletter;
 
-  _NewsletterArticlesPageState(Newsletter newsletter)
-      : _newsletter = newsletter,
-        _loadArticlesBloc = new LoadArticlesBloc(
-          newsletter,
-          kiwi.Container().resolve(),
-        ) {
-    _loadArticlesBloc.dispatch(new DoLoadArticlesEvent());
-  }
+  _NewsletterArticlesPageState(Newsletter newsletter) : _newsletter = newsletter {}
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +31,16 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
         elevation: 0,
       ),
       body: ChangeNotifierProvider(
-        builder: (c) => new NewsletterState(_newsletter),
+        builder: (c) => new NewsletterState(
+              _newsletter,
+              kiwi.Container().resolve(),
+              kiwi.Container().resolve(),
+            ),
         child: Stack(
-          children: <Widget>[buildBackground(), buildBody()],
+          children: <Widget>[
+            ArticlesPageBackground(),
+            buildBody(),
+          ],
         ),
       ),
     );
@@ -52,7 +51,7 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
       children: <Widget>[
         Flexible(
           flex: 1,
-          child: buildTitle(),
+          child: ArticlesTitle(),
         ),
         Flexible(
           flex: 7,
@@ -63,171 +62,79 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
     );
   }
 
-  Widget buildBackground() {
-    return Flex(
-      direction: Axis.vertical,
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            color: Colors.green,
-          ),
-          flex: 1,
-        ),
-        Flexible(
-          child: Container(),
-          flex: 4,
-        )
-      ],
-    );
-  }
-
-  Widget buildTitle() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-        child: Center(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                child: Icon(
-                  Icons.import_contacts,
-                  color: Colors.white,
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Consumer<NewsletterState>(
-                  builder: (BuildContext context, NewsletterState state, _) => Text(
-                        state.newsletter.name,
-                        style: TextStyle(fontSize: 30, color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget buildContent() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: BlocBuilder(
-        bloc: _loadArticlesBloc,
-        builder: (BuildContext context, LoadArticlesState state) {
-          Widget body = Text("");
-
-          if (state.isLoading || state.isUpdating) {
-            body = Padding(
-              padding: const EdgeInsets.fromLTRB(0, 54, 0, 0),
-              child: Center(
-                child: CircularProgressIndicator(),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
+          ),
+        ),
+        elevation: 16,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Verfügbare Ausgaben",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
-            );
-          } else if (state.isLoaded && state.loadedArticles.isEmpty) {
-            body = Padding(
-              padding: const EdgeInsets.fromLTRB(0, 54, 0, 0),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Icon(Icons.announcement),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                    child: Center(
-                      child: Text("Es sind noch keine Ausgaben verfügbar"),
-                    ),
-                  ),
+                  LastUpdatedInformation(),
+                  UpdateArticlesButton(),
                 ],
               ),
-            );
-          } else if (state.isLoaded && state.loadedArticles.isNotEmpty) {
-            body = Flexible(
-              child: GridView.count(
-                childAspectRatio: 1 / sqrt(2),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                children: List.generate(state.loadedArticles.length, (i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new ChangeNotifierProvider(
-                      builder: (c) => new ArticleState(state.loadedArticles[i]),
-                      child: new ArticleCard(
-                        onTap: () {},
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            );
-          }
-
-          return Card(
-            elevation: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Verfügbare Ausgaben",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Aktualisiert am 17.06.2019 um 14:12 Uhr",
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      FlatButton(
-                        onPressed: state.isUpdating
-                            ? null
-                            : () {
-                                _loadArticlesBloc.dispatch(new UpdateArticlesEvent());
-                              },
-                        child: Text("Aktualisieren".toUpperCase()),
-                        textColor: Colors.amber,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                  child: Opacity(
-                    opacity: state.hasError ? 1 : 0,
-                    child: Text(
-                      state.error ?? "",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  child: Divider(
-                    height: 1,
-                    color: Colors.black12,
-                  ),
-                ),
-                body,
-              ],
             ),
-          );
-        },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: Consumer<NewsletterState>(
+                builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
+                      opacity: value.error != null ? 1 : 0,
+                      child: Text(
+                        value.error ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: Consumer<NewsletterState>(
+                builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
+                      opacity: (value.isLoading || value.isUpdating) ? 1 : 0,
+                      child: LinearProgressIndicator(),
+                    ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Divider(
+                height: 1,
+                color: Colors.black12,
+              ),
+            ),
+            Consumer<NewsletterState>(
+              builder: (BuildContext context, NewsletterState state, _) {
+                if (state.isLoaded && state.loadedArticles.isEmpty) {
+                  return NoArticlesEmptyState();
+                } else if (state.isLoaded && state.loadedArticles.isNotEmpty) {
+                  return ArticlesList(state.loadedArticles, _newsletter);
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _loadArticlesBloc.dispose();
   }
 }

@@ -32,7 +32,7 @@ class ArticleEntity extends DatabaseEntity {
       id: map["id"],
       newsletterId: map["newsletterId"],
       downloadDate: downloadDate,
-      isDownloaded: map["isDownloaded"],
+      isDownloaded: map["isDownloaded"] == 1,
       originalFilename: map["originalFilename"],
       releaseDate: releaseDate,
       sourceUrl: map["sourceUrl"],
@@ -64,15 +64,15 @@ class ArticleEntity extends DatabaseEntity {
     return "CREATE TABLE IF NOT EXISTS " +
         tableName() +
         " ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "newsletterId INTEGER,"
-        "releaseDate INTEGER,"
-        "downloadDate INTEGER,"
-        "sourceUrl TEXT,"
-        "storagePath TEXT,"
-        "originalFilename TEXT,"
-        "isDownloaded BOOL,"
-        "thumbnailPath TEXT"
-        ")";
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "newsletterId INTEGER,"
+            "releaseDate INTEGER,"
+            "downloadDate INTEGER,"
+            "sourceUrl TEXT,"
+            "storagePath TEXT,"
+            "originalFilename TEXT,"
+            "isDownloaded BOOL,"
+            "thumbnailPath TEXT"
+            ")";
   }
 }
