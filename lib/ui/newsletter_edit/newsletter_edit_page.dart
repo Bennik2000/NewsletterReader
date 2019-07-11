@@ -39,7 +39,13 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
               _newsletterEditBloc
                   .dispatch(new FinishEditNewsletterEvent(_nameTextEditingController.text, _urlTextEditingController.text));
             },
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.delete_outline),
+            onPressed: () {
+              _newsletterEditBloc.dispatch(new DeleteNewsletterEvent());
+            },
+          ),
         ],
       ),
       body: BlocListener(

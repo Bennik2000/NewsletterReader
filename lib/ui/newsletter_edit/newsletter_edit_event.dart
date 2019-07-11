@@ -19,3 +19,5 @@ class FinishEditNewsletterEvent extends NewsletterEditEvent {
 
   FinishEditNewsletterEvent(this.name, this.url);
 }
+
+class DeleteNewsletterEvent extends NewsletterEditEvent {}

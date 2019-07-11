@@ -1,23 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletter_delete.dart';
 import 'package:newsletter_reader/data/model/newsletter.dart';
+import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_event.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_state.dart';
 
 class NewsletterEditBloc extends Bloc<NewsletterEditEvent, NewsletterEditState> {
   final Newsletter newsletter;
-  final NewsletterRepository repository = kiwi.Container().resolve<NewsletterRepository>();
+  final NewsletterRepository _newsletterRepository = kiwi.Container().resolve();
+  final ArticleRepository _articleRepository = kiwi.Container().resolve();
 
   NewsletterEditErrorState errorState = new NewsletterEditErrorState();
 
   NewsletterEditBloc(this.newsletter);
 
   @override
-  get initialState => NewsletterEditState(
-        newsletter: newsletter,
-        errorState: errorState,
-      );
+  get initialState => NewsletterEditState(newsletter: newsletter, errorState: errorState);
 
   NewsletterEditState buildState() {
     return new NewsletterEditState(newsletter: newsletter, errorState: errorState);
@@ -36,13 +36,17 @@ class NewsletterEditBloc extends Bloc<NewsletterEditEvent, NewsletterEditState> 
     if (event is FinishEditNewsletterEvent) {
       yield* handleFinishEditEvent(event);
     }
+
+    if (event is DeleteNewsletterEvent) {
+      yield* handleDeleteEvent(event);
+    }
   }
 
   Stream<NewsletterEditState> handleFinishEditEvent(FinishEditNewsletterEvent event) async* {
     errorState = validateForm(event);
 
     if (!errorState.hasError) {
-      await repository.saveNewsletter(newsletter);
+      await _newsletterRepository.saveNewsletter(newsletter);
 
       yield new NewsletterEditFinishedState(newsletter: newsletter, errorState: errorState);
     } else {
@@ -82,5 +86,11 @@ class NewsletterEditBloc extends Bloc<NewsletterEditEvent, NewsletterEditState> 
   Stream<NewsletterEditState> handleChangeUpdateIntervalEvent(ChangeUpdateIntervalEvent event) async* {
     newsletter.updateInterval = event.newUpdateInterval;
     yield buildState();
+  }
+
+  Stream<NewsletterEditState> handleDeleteEvent(DeleteNewsletterEvent event) async* {
+    await new NewsletterDelete(newsletter, _newsletterRepository, _articleRepository).deleteNewsletter();
+
+    yield new NewsletterEditFinishedState(newsletter: newsletter, errorState: errorState);
   }
 }

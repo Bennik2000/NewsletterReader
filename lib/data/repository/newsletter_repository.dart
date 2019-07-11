@@ -28,4 +28,8 @@ class NewsletterRepository {
       await _database.update(NewsletterEntity.tableName(), row);
     }
   }
+
+  Future deleteNewsletter(Newsletter newsletter) async {
+    await _database.delete(NewsletterEntity.tableName(), newsletter.id);
+  }
 }

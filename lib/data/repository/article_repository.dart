@@ -49,4 +49,8 @@ class ArticleRepository {
   Future saveArticle(Article article) async {
     await saveArticleForNewsletter(article.newsletterId, article);
   }
+
+  Future deleteArticle(Article article) async {
+    await _database.delete(ArticleEntity.tableName(), article.id);
+  }
 }
