@@ -6,7 +6,7 @@ import 'package:newsletter_reader/data/network/article_searcher.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/util/util.dart';
 
-import 'network_utils.dart';
+import 'http_utils.dart';
 
 class SameUrlArticleSearcher extends ArticleSearcher {
   final Newsletter _newsletter;
@@ -24,7 +24,7 @@ class SameUrlArticleSearcher extends ArticleSearcher {
 
     var article = await _articleRepository.queryLastArticleOfNewsletter(_newsletter.id);
     if (article?.releaseDate != null) {
-      headers.addAll({"If-Modified-Since": NetworkUtils.formatDateForHeader(article.releaseDate)});
+      headers.addAll({"If-Modified-Since": HttpUtils.formatDateForHeader(article.releaseDate)});
     }
 
     var response = await http.get(
@@ -33,27 +33,15 @@ class SameUrlArticleSearcher extends ArticleSearcher {
       headers: headers,
     );
 
-    String filename;
-
-    if (response.headers.containsKey("content-disposition")) {
-      var contentDisposition = response.headers["content-disposition"];
-
-      RegExp regExp = new RegExp('filename[*]?=\\"(.*)\\"');
-      var matches = regExp.allMatches(contentDisposition).toList();
-
-      if (matches.length > 0) {
-        filename = matches[0].group(1);
-      }
-    }
-
     if (response.statusCode == HttpStatus.ok) {
+      var date = HttpUtils.getCreationDateOrNull(response.headers) ?? DateTime.now();
+
       var article = new Article(
-        isDownloaded: false,
-        sourceUrl: _newsletter.url.toString(),
-        newsletterId: _newsletter.id,
-        originalFilename: filename,
-        releaseDate: DateTime.now(), // TODO: Read release Date from headers
-      );
+          isDownloaded: false,
+          sourceUrl: _newsletter.url.toString(),
+          newsletterId: _newsletter.id,
+          originalFilename: HttpUtils.getFilenameOfResponseHeaders(response.headers),
+          releaseDate: date);
 
       return [article];
     }

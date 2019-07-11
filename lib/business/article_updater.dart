@@ -1,5 +1,6 @@
 import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/network/article_searcher.dart';
+import 'package:newsletter_reader/data/network/pattern_url_article_searcher.dart';
 import 'package:newsletter_reader/data/network/same_url_article_searcher.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
@@ -30,7 +31,7 @@ class ArticleUpdater {
         return new SameUrlArticleSearcher(_newsletter, _articleRepository);
         break;
       case UpdateStrategy.PatternUrl:
-        return null;
+        return new PatternUrlArticleSearcher(_newsletter, _articleRepository);
         break;
     }
 
