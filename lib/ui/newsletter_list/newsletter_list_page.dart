@@ -1,6 +1,8 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletter_import.dart';
 import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles_page.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
@@ -25,6 +27,16 @@ class _NewsletterListPageState extends State<NewsletterListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Newsletters"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.import_export),
+            onPressed: () async {
+              var path = await FilePicker.getFilePath();
+
+              new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+            },
+          )
+        ],
       ),
       body: BlocProvider(
         bloc: _newsletterListBloc,

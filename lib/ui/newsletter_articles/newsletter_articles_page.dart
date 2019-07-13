@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletter_share.dart';
+import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
 import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_list.dart';
@@ -29,6 +31,14 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              new NewsletterShare(_newsletter, new FilePublicRepository()).shareNewsletter();
+            },
+          )
+        ],
       ),
       body: ChangeNotifierProvider(
         builder: (c) => new NewsletterState(
