@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/business/article_download_delete.dart';
-import 'package:newsletter_reader/business/article_downloader.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/business/articles/article_download_delete.dart';
+import 'package:newsletter_reader/business/articles/article_downloader.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:open_file/open_file.dart';
 
 class ArticleState with ChangeNotifier {

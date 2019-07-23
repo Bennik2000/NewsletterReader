@@ -1,7 +1,7 @@
 import 'package:newsletter_reader/data/filestorage/file_download_repository.dart';
-import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:path/path.dart' as path;
 
 class ArticleDownloader {

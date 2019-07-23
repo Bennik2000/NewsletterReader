@@ -1,7 +1,7 @@
-import 'package:newsletter_reader/business/article_download_delete.dart';
-import 'package:newsletter_reader/data/model/newsletter.dart';
+import 'package:newsletter_reader/business/articles/article_download_delete.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterDelete {
   final NewsletterRepository _newsletterRepository;

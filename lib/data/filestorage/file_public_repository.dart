@@ -18,6 +18,12 @@ class FilePublicRepository extends FileRepository {
       storageDirectory = await getApplicationDocumentsDirectory();
     }
 
-    return File(join(storageDirectory.path, path));
+    var file = File(join(storageDirectory.path, path));
+
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+    }
+
+    return file;
   }
 }

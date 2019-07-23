@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterImport {
   final NewsletterRepository _newsletterRepository;

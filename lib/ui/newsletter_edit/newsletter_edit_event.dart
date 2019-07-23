@@ -1,5 +1,4 @@
-import 'package:newsletter_reader/data/model/model.dart';
-import 'package:newsletter_reader/data/model/newsletter.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterEditEvent {}
 

@@ -1,1 +1,1 @@
-export 'error/InvalidArgumentException.dart';
+export 'package:newsletter_reader/util/general_exceptions.dart';

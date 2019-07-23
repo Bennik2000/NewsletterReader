@@ -1,5 +1,5 @@
 import 'package:newsletter_reader/data/database/entity/database_entity.dart';
-import 'package:newsletter_reader/data/model/newsletter.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterEntity extends DatabaseEntity {
   Newsletter _newsletter;

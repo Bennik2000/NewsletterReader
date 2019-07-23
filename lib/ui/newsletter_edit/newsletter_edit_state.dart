@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterEditState {
   final Newsletter newsletter;

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/network/article_searcher.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/util/util.dart';
 
 import 'http_utils.dart';

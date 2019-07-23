@@ -1,4 +1,4 @@
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterListState {
   bool isLoaded;
@@ -11,13 +11,13 @@ class NewsletterListState {
     newsletters = new List();
   }
 
-  NewsletterListState.loading(){
+  NewsletterListState.loading() {
     isLoading = true;
     isLoaded = false;
     newsletters = new List();
   }
 
-  NewsletterListState.loaded(this.newsletters){
+  NewsletterListState.loaded(this.newsletters) {
     isLoaded = true;
     isLoading = false;
   }

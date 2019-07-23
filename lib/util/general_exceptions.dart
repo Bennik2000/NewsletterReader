@@ -1,0 +1,1 @@
+class InvalidArgumentException with Exception {}

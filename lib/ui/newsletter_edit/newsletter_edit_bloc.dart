@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/business/newsletter_delete.dart';
-import 'package:newsletter_reader/data/model/newsletter.dart';
+import 'package:newsletter_reader/business/newsletters/newsletter_delete.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_event.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_state.dart';
 

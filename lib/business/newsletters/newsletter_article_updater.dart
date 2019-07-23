@@ -1,19 +1,19 @@
-import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/network/article_searcher.dart';
 import 'package:newsletter_reader/data/network/pattern_url_article_searcher.dart';
 import 'package:newsletter_reader/data/network/same_url_article_searcher.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 
-class ArticleUpdater {
+class NewsletterArticleUpdater {
   final Newsletter _newsletter;
   final ArticleRepository _articleRepository;
   final NewsletterRepository _newsletterRepository;
 
-  ArticleUpdater(this._newsletter, this._articleRepository, this._newsletterRepository);
+  NewsletterArticleUpdater(this._newsletter, this._articleRepository, this._newsletterRepository);
 
   Future<List<Article>> updateArticles() async {
-    var articleSearcher = getArticleSearcher();
+    var articleSearcher = _getArticleSearcher();
 
     List<Article> newArticles = await articleSearcher.fetchNewArticles();
 
@@ -25,7 +25,7 @@ class ArticleUpdater {
     return newArticles;
   }
 
-  ArticleSearcher getArticleSearcher() {
+  ArticleSearcher _getArticleSearcher() {
     switch (_newsletter.updateStrategy) {
       case UpdateStrategy.SameUrl:
         return new SameUrlArticleSearcher(_newsletter, _articleRepository);
@@ -39,13 +39,13 @@ class ArticleUpdater {
   }
 }
 
-class ArticleUpdaterFactory {
+class NewsletterArticleUpdaterFactory {
   final ArticleRepository _articleRepository;
   final NewsletterRepository _newsletterRepository;
 
-  ArticleUpdaterFactory(this._articleRepository, this._newsletterRepository);
+  NewsletterArticleUpdaterFactory(this._articleRepository, this._newsletterRepository);
 
-  ArticleUpdater getNewArticleUpdaterInstance(Newsletter newsletter) {
-    return new ArticleUpdater(newsletter, _articleRepository, _newsletterRepository);
+  NewsletterArticleUpdater getNewArticleUpdaterInstance(Newsletter newsletter) {
+    return new NewsletterArticleUpdater(newsletter, _articleRepository, _newsletterRepository);
   }
 }

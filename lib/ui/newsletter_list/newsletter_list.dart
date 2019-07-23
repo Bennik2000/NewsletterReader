@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_bloc.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_state.dart';
 import 'package:newsletter_reader/ui/widget/MaxSizeIcon.dart';

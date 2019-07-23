@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
 import 'package:provider/provider.dart';
 

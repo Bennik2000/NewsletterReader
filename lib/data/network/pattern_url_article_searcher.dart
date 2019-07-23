@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:newsletter_reader/business/util/date_template_filler.dart';
 import 'package:newsletter_reader/business/util/string_template_filler.dart';
-import 'package:newsletter_reader/data/model/model.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/util/util.dart';
 
 import 'article_searcher.dart';

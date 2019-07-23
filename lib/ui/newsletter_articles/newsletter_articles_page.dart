@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/business/newsletter_share.dart';
+import 'package:newsletter_reader/business/newsletters/newsletter_export.dart';
 import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_list.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_page_background.dart';
@@ -35,17 +35,17 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              new NewsletterShare(_newsletter, new FilePublicRepository()).shareNewsletter();
+              new NewsletterExport(_newsletter, new FilePublicRepository()).shareNewsletter();
             },
           )
         ],
       ),
       body: ChangeNotifierProvider(
         builder: (c) => new NewsletterState(
-              _newsletter,
-              kiwi.Container().resolve(),
-              kiwi.Container().resolve(),
-            ),
+          _newsletter,
+          kiwi.Container().resolve(),
+          kiwi.Container().resolve(),
+        ),
         child: Stack(
           children: <Widget>[
             ArticlesPageBackground(),
@@ -108,21 +108,21 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Consumer<NewsletterState>(
                 builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
-                      opacity: value.error != null ? 1 : 0,
-                      child: Text(
-                        value.error ?? "",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
+                  opacity: value.error != null ? 1 : 0,
+                  child: Text(
+                    value.error ?? "",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Consumer<NewsletterState>(
                 builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
-                      opacity: (value.isLoading || value.isUpdating) ? 1 : 0,
-                      child: LinearProgressIndicator(),
-                    ),
+                  opacity: (value.isLoading || value.isUpdating) ? 1 : 0,
+                  child: LinearProgressIndicator(),
+                ),
               ),
             ),
             Padding(
