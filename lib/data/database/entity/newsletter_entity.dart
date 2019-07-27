@@ -53,6 +53,8 @@ class NewsletterEntity extends DatabaseEntity {
       name: map["name"],
       url: map["url"],
       maxDiskSpaceUntilDelete: map["maxDiskSpaceUntilDelete"],
+      isAutoDownloadEnabled: map["isAutoDownloadEnabled"] == 1,
+      isAutoUpdateEnabled: map["isAutoUpdateEnabled"] == 1,
       deleteDownloadedBehavior: deleteDownloadedBehavior,
       durationUntilDelete: durationUntilDelete,
       updateInterval: updateInterval,
@@ -68,6 +70,8 @@ class NewsletterEntity extends DatabaseEntity {
       "id": _newsletter.id,
       "name": _newsletter.name,
       "maxDiskSpaceUntilDelete": _newsletter.maxDiskSpaceUntilDelete,
+      "isAutoDownloadEnabled": _newsletter.isAutoDownloadEnabled,
+      "isAutoUpdateEnabled": _newsletter.isAutoUpdateEnabled,
       "deleteDownloadedBehavior": _newsletter.deleteDownloadedBehavior?.index,
       "durationUntilDelete": _newsletter.durationUntilDelete?.inMilliseconds,
       "updateInterval": _newsletter.updateInterval?.index,
@@ -92,6 +96,8 @@ class NewsletterEntity extends DatabaseEntity {
             "updateInterval INTEGER,"
             "updateTime INTEGER,"
             "updateStrategy INTEGER,"
+            "isAutoUpdateEnabled BOOL,"
+            "isAutoDownloadEnabled BOOL,"
             "url INTEGER,"
             "lastUpdated INTEGER"
             ")";

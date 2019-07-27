@@ -49,12 +49,12 @@ class NewsletterEditState with ChangeNotifier {
   }
 
   set autoUpdateEnabled(bool isEnabled) {
-    _newsletter.autoUpdateEnabled = isEnabled;
+    _newsletter.isAutoUpdateEnabled = isEnabled;
     notifyListeners();
   }
 
   set autoDownloadEnabled(bool isEnabled) {
-    _newsletter.autoDownloadEnabled = isEnabled;
+    _newsletter.isAutoDownloadEnabled = isEnabled;
     notifyListeners();
   }
 
@@ -79,7 +79,7 @@ class NewsletterEditState with ChangeNotifier {
     urlError = newsletter.url?.isEmpty ?? true == null ? "Es muss eine Url angegeben sein!" : null;
 
     updateIntervalError = null;
-    if (newsletter.autoUpdateEnabled ?? false) {
+    if (newsletter.isAutoUpdateEnabled ?? false) {
       updateIntervalError = newsletter.updateInterval == null ? "Es muss ein update Interval ausgewählt sein!" : null;
     }
   }

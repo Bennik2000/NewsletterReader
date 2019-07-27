@@ -129,7 +129,7 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                           onChanged: (isChecked) {
                             state.autoDownloadEnabled = isChecked;
                           },
-                          value: state.newsletter.autoDownloadEnabled ?? false,
+                          value: state.newsletter.isAutoDownloadEnabled ?? false,
                         ),
                       ),
                       Expanded(
@@ -150,7 +150,7 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                           onChanged: (isChecked) {
                             state.autoUpdateEnabled = isChecked;
                           },
-                          value: state.newsletter.autoUpdateEnabled ?? false,
+                          value: state.newsletter.isAutoUpdateEnabled ?? false,
                         ),
                       ),
                       Text(
@@ -162,7 +162,7 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                 ),
                 Consumer(
                   builder: (BuildContext context, NewsletterEditState state, _) => AnimatedSwitcher(
-                    child: state.newsletter.autoUpdateEnabled ?? false
+                    child: state.newsletter.isAutoUpdateEnabled ?? false
                         ? Consumer(
                             builder: (BuildContext context, NewsletterEditState state, _) => InputDecorator(
                               child: DropdownButton(
