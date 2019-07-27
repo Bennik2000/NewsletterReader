@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:background_fetch/background_fetch.dart';
-import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
+
+import 'background_main.dart' as background_main;
 
 void backgroundHeadlessTaskHandler() async {
   new PeriodicBackgroundTask().backgroundTaskHandler(DateTime.now(), true);
@@ -27,15 +26,10 @@ class PeriodicBackgroundTask {
 
   Future backgroundTaskHandler(DateTime now, bool isHeadless) async {
     try {
-      await _writeLogEntry("[${DateTime.now().toIso8601String()}] Event received.\n");
+      await background_main.main();
     } finally {
       BackgroundFetch.finish();
     }
-  }
-
-  Future _writeLogEntry(String logMessage) async {
-    var file = await new FilePublicRepository().getFile("Newsletter", "backgroundFetchLog.log");
-    await file.writeAsString(logMessage, mode: FileMode.append);
   }
 }
 

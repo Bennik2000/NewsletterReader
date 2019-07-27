@@ -1,7 +1,6 @@
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
-import 'package:newsletter_reader/util/cancellation_token.dart';
 
 class NewsletterAutoUpdateManager {
   final NewsletterRepository newsletterRepository;
@@ -9,7 +8,7 @@ class NewsletterAutoUpdateManager {
 
   NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory);
 
-  Future tick(DateTime now, CancellationToken token) async {
+  Future tick(DateTime now) async {
     var newsletters = await newsletterRepository.queryNewsletters();
 
     var startDateTime = DateTime.now();
@@ -70,6 +69,7 @@ class NewsletterAutoUpdateManager {
           lastUpdate.microsecond,
         );
       case UpdateInterval.Manual:
+      default:
         break;
     }
 
@@ -77,11 +77,14 @@ class NewsletterAutoUpdateManager {
   }
 
   DateTime _alignWithUpdateTimeIfNeeded(DateTime nextUpdate, DateTime preferredUpdateTime, UpdateInterval updateInterval) {
+    preferredUpdateTime = preferredUpdateTime ?? DateTime.now();
+
     switch (updateInterval) {
       case UpdateInterval.Hourly:
         return DateTime(
           nextUpdate.year,
           nextUpdate.month,
+          nextUpdate.day,
           nextUpdate.hour,
           preferredUpdateTime.minute,
         );
@@ -91,10 +94,12 @@ class NewsletterAutoUpdateManager {
         return DateTime(
           nextUpdate.year,
           nextUpdate.month,
+          nextUpdate.day,
           preferredUpdateTime.hour,
           preferredUpdateTime.minute,
         );
       case UpdateInterval.Manual:
+      default:
         break;
     }
 

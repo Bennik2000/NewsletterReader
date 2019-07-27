@@ -9,13 +9,15 @@ import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 
 void inject() {
-  kiwi.Container()
-    ..registerInstance(new DatabaseAccess())
-    ..registerFactory((c) => NewsletterRepository(c.resolve()))
-    ..registerFactory((c) => ArticleRepository(c.resolve()))
-    ..registerFactory((c) => FileDownloadRepository())
-    ..registerFactory((c) => FileDownloader())
-    ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
-    ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve()))
-    ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()));
+  try {
+    kiwi.Container()
+      ..registerInstance(new DatabaseAccess())
+      ..registerFactory((c) => NewsletterRepository(c.resolve()))
+      ..registerFactory((c) => ArticleRepository(c.resolve()))
+      ..registerFactory((c) => FileDownloadRepository())
+      ..registerFactory((c) => FileDownloader())
+      ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
+      ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve()))
+      ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()));
+  } catch (e) {}
 }
