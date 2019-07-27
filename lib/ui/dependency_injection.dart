@@ -2,11 +2,14 @@ import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/business/articles/article_download_delete.dart';
 import 'package:newsletter_reader/business/articles/article_downloader.dart';
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
+import 'package:newsletter_reader/business/notification/notificator.dart';
 import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
 import 'package:newsletter_reader/data/filestorage/file_download_repository.dart';
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+
+import 'local_notificator.dart';
 
 void inject() {
   try {
@@ -18,6 +21,7 @@ void inject() {
       ..registerFactory((c) => FileDownloader())
       ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve()))
-      ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()));
+      ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()))
+      ..registerFactory<Notificator, LocalNotificator>((c) => LocalNotificator());
   } catch (e) {}
 }

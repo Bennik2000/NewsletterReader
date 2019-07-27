@@ -16,6 +16,7 @@ class NewsletterImport {
     var newsletter = NewsletterJsonHelper.fromJson(json);
 
     newsletter.id = null;
+    newsletter.lastUpdated = null;
 
     await _newsletterRepository.saveNewsletter(newsletter);
   }

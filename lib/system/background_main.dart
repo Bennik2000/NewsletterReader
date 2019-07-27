@@ -12,5 +12,6 @@ Future main() async {
       kiwi.Container().resolve(),
       kiwi.Container().resolve(),
     ),
+    kiwi.Container().resolve(),
   ).tick(DateTime.now());
 }

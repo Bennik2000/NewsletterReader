@@ -1,12 +1,14 @@
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
+import 'package:newsletter_reader/business/notification/notificator.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterAutoUpdateManager {
   final NewsletterRepository newsletterRepository;
   final NewsletterArticleUpdaterFactory newsletterUpdaterFactory;
+  final Notificator notificator;
 
-  NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory);
+  NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory, this.notificator);
 
   Future tick(DateTime now) async {
     var newsletters = await newsletterRepository.queryNewsletters();
@@ -16,7 +18,7 @@ class NewsletterAutoUpdateManager {
     newsletters.forEach((n) async {
       // The tick() function may be executed in the background. iOS limits the background time to 30s so
       // we try to stay in this limit
-      if (startDateTime.add(Duration(seconds: 20)).isBefore(DateTime.now())) {
+      if (startDateTime.add(Duration(seconds: 25)).isBefore(DateTime.now())) {
         return;
       }
 
@@ -25,16 +27,20 @@ class NewsletterAutoUpdateManager {
   }
 
   Future _updateNewsletterIfNeeded(DateTime now, Newsletter newsletter) async {
-    if (_canDoUpdateNow(now, newsletter)) {
-      await newsletterUpdaterFactory.getNewArticleUpdaterInstance(newsletter).updateArticles();
+    if (newsletter.isAutoUpdateEnabled && _canDoUpdateNow(now, newsletter)) {
+      var newNewsletters = await newsletterUpdaterFactory.getNewArticleUpdaterInstance(newsletter).updateArticles();
+
+      if (newNewsletters.isNotEmpty) {
+        notificator.showSimpleTextNotification(
+            "Neue Beiträge für ${newsletter.name}", "Es gibt neue Beiträge für ${newsletter.name}");
+      }
     }
   }
 
   bool _canDoUpdateNow(DateTime now, Newsletter newsletter) {
-    var preferredUpdateTime = newsletter.updateTime;
-    var updateInterval = newsletter.updateInterval;
-
-    var nextUpdate = newsletter.lastUpdated;
+    var preferredUpdateTime = newsletter.updateTime ?? DateTime.now();
+    var updateInterval = newsletter.updateInterval ?? UpdateInterval.Daily;
+    var nextUpdate = newsletter.lastUpdated ?? DateTime.fromMillisecondsSinceEpoch(0);
 
     nextUpdate = _alignWithUpdateTimeIfNeeded(nextUpdate, preferredUpdateTime, updateInterval);
     nextUpdate = _getNextUpdate(nextUpdate, updateInterval);
@@ -68,7 +74,6 @@ class NewsletterAutoUpdateManager {
           lastUpdate.millisecond,
           lastUpdate.microsecond,
         );
-      case UpdateInterval.Manual:
       default:
         break;
     }
@@ -77,8 +82,6 @@ class NewsletterAutoUpdateManager {
   }
 
   DateTime _alignWithUpdateTimeIfNeeded(DateTime nextUpdate, DateTime preferredUpdateTime, UpdateInterval updateInterval) {
-    preferredUpdateTime = preferredUpdateTime ?? DateTime.now();
-
     switch (updateInterval) {
       case UpdateInterval.Hourly:
         return DateTime(
@@ -98,7 +101,6 @@ class NewsletterAutoUpdateManager {
           preferredUpdateTime.hour,
           preferredUpdateTime.minute,
         );
-      case UpdateInterval.Manual:
       default:
         break;
     }

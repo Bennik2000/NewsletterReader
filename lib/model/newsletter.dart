@@ -34,7 +34,7 @@ class Newsletter {
 
 enum DeleteDownloadedBehavior { DiskSpace, Time, Manual }
 
-enum UpdateInterval { Hourly, Daily, Weekly, Monthly, Manual }
+enum UpdateInterval { Hourly, Daily, Weekly, Monthly }
 
 enum UpdateStrategy { SameUrl, PatternUrl }
 
