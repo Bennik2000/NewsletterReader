@@ -9,6 +9,9 @@ class Newsletter {
   DateTime updateTime;
   DateTime lastUpdated;
 
+  bool autoUpdateEnabled;
+  bool autoDownloadEnabled;
+
   DeleteDownloadedBehavior deleteDownloadedBehavior;
   int maxDiskSpaceUntilDelete;
   Duration durationUntilDelete;
