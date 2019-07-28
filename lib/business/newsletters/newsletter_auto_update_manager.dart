@@ -1,5 +1,6 @@
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
 import 'package:newsletter_reader/business/notification/notificator.dart';
+import 'package:newsletter_reader/business/util/cancellation_token.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
 
@@ -10,20 +11,20 @@ class NewsletterAutoUpdateManager {
 
   NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory, this.notificator);
 
-  Future tick(DateTime now) async {
+  Future tick(DateTime now, CancellationToken token) async {
     var newsletters = await newsletterRepository.queryNewsletters();
 
-    var startDateTime = DateTime.now();
-
-    newsletters.forEach((n) async {
-      // The tick() function may be executed in the background. iOS limits the background time to 30s so
-      // we try to stay in this limit
-      if (startDateTime.add(Duration(seconds: 25)).isBefore(DateTime.now())) {
+    for (var newsletter in newsletters) {
+      if (token.isCancelled) {
         return;
       }
 
-      await _updateNewsletterIfNeeded(now, n);
-    });
+      try {
+        await _updateNewsletterIfNeeded(now, newsletter);
+      } on Exception catch (e) {
+        print(e);
+      }
+    }
   }
 
   Future _updateNewsletterIfNeeded(DateTime now, Newsletter newsletter) async {

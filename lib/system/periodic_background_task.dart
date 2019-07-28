@@ -25,11 +25,11 @@ class PeriodicBackgroundTask {
   }
 
   Future backgroundTaskHandler(DateTime now, bool isHeadless) async {
-    try {
-      await background_main.main();
-    } finally {
+    await background_main.main().catchError((e) {
+      print(e);
+    }).whenComplete(() {
       BackgroundFetch.finish();
-    }
+    });
   }
 }
 

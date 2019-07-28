@@ -22,6 +22,21 @@ class ArticleRepository {
     return articles;
   }
 
+  Future<List<Article>> queryNotDownloadedArticlesOfNewsletter(int newsletterId) async {
+    var rows = await _database.queryRows(
+      ArticleEntity.tableName(),
+      where: "newsletterId=? AND (isDownloaded=0 OR isDownloaded IS NULL)",
+      whereArgs: [newsletterId],
+    );
+    var articles = new List<Article>();
+
+    for (var row in rows) {
+      articles.add(new ArticleEntity.fromMap(row).asArticle());
+    }
+
+    return articles;
+  }
+
   Future<Article> queryLastArticleOfNewsletter(int newsletterId) async {
     var rows = await _database.queryRows(ArticleEntity.tableName(),
         where: "newsletterId=?", whereArgs: [newsletterId], orderBy: "releaseDate DESC", limit: 1);
