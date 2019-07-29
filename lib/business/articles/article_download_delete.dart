@@ -10,8 +10,8 @@ class ArticleDownloadDelete {
   ArticleDownloadDelete(this._article, this._articleRepository);
 
   Future deleteDownloadedArticle() async {
-    await deleteFile(_article.storagePath);
-    await deleteFile(_article.thumbnailPath);
+    await _deleteFile(_article.storagePath);
+    await _deleteFile(_article.thumbnailPath);
 
     _article.isDownloaded = false;
     _article.storagePath = null;
@@ -20,7 +20,7 @@ class ArticleDownloadDelete {
     _articleRepository.saveArticle(_article);
   }
 
-  Future deleteFile(String path) async {
+  Future _deleteFile(String path) async {
     if (path == null) return;
 
     File file = File.fromUri(Uri.file(path));

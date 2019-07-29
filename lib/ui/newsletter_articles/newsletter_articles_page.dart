@@ -136,12 +136,22 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
             ),
             Consumer<NewsletterState>(
               builder: (BuildContext context, NewsletterState state, _) {
+                Widget widget;
+
                 if (state.isLoaded && state.loadedArticles.isEmpty) {
-                  return NoArticlesEmptyState();
+                  widget = NoArticlesEmptyState();
                 } else if (state.isLoaded && state.loadedArticles.isNotEmpty) {
-                  return ArticlesList(state.loadedArticles, _newsletter);
+                  widget = ArticlesList(_newsletter);
+                } else {
+                  widget = Container();
                 }
-                return Container();
+
+                return Flexible(
+                  child: new AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: widget,
+                  ),
+                );
               },
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
+import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
 import 'package:provider/provider.dart';
 
 import 'article_placeholder.dart';
@@ -8,11 +9,18 @@ import 'article_thumbnail.dart';
 
 class ArticleCard extends StatelessWidget {
   final double borderRadius = 16;
+  final Newsletter _newsletter;
+  final Article _article;
+
+  const ArticleCard(this._newsletter, this._article);
 
   @override
   Widget build(BuildContext context) {
-    return new Consumer(
-      builder: (BuildContext context, ArticleState state, _) => buildCard(context, state),
+    return new ChangeNotifierProvider(
+      builder: (c) => new ArticleState(_article, _newsletter),
+      child: new Consumer(
+        builder: (BuildContext context, ArticleState state, _) => buildCard(context, state),
+      ),
     );
   }
 
@@ -44,16 +52,7 @@ class ArticleCard extends StatelessWidget {
           ),
         ),
       );
-    } else if (state.article.isDownloaded ?? false) {
-      button = Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IconButton(
-          icon: Icon(Icons.delete_outline),
-          color: Theme.of(context).accentColor,
-          onPressed: state.deleteArticle,
-        ),
-      );
-    } else {
+    } else if (!(state.article.isDownloaded ?? false)) {
       button = Padding(
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
@@ -63,41 +62,92 @@ class ArticleCard extends StatelessWidget {
           onPressed: state.downloadArticle,
         ),
       );
+    } else {
+      button = Container();
     }
 
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(borderRadius),
-        onTap: state.articleClicked,
-        child: Stack(
-          children: <Widget>[
-            AnimatedSwitcher(
-              child: image,
-              duration: Duration(milliseconds: 200),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      child: Text(
-                        DateFormat.yMMMd().format(state.article.releaseDate),
-                        overflow: TextOverflow.ellipsis,
+      child: Consumer(
+        builder: (BuildContext context, NewsletterState newsletterState, _) {
+          return InkWell(
+            borderRadius: BorderRadius.circular(borderRadius),
+            onTap: state.articleClicked,
+            onLongPress: () async {
+              showModalBottomSheet(
+                builder: (BuildContext context) {
+                  var buttons = <Widget>[];
+
+                  if (state.article.isDownloaded ?? false) {
+                    buttons.add(new ListTile(
+                      leading: new Icon(Icons.import_contacts),
+                      title: new Text('Lesen'),
+                      onTap: () {
+                        state.articleClicked();
+                        Navigator.of(context).pop();
+                      },
+                    ));
+
+                    buttons.add(new ListTile(
+                      leading: new Icon(Icons.file_download),
+                      title: new Text('Download entfernen'),
+                      onTap: () async {
+                        await state.deleteDownloadedArticle();
+                        Navigator.of(context).pop();
+                      },
+                    ));
+                  } else {
+                    buttons.add(new ListTile(
+                      leading: new Icon(Icons.file_download),
+                      title: new Text('Herunterladen'),
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await state.downloadArticle();
+                      },
+                    ));
+                  }
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: buttons,
+                  );
+                },
+                context: context,
+              );
+
+              //await newsletterState.deleteArticle(state.article);
+            },
+            child: Stack(
+              children: <Widget>[
+                AnimatedSwitcher(
+                  child: image,
+                  duration: Duration(milliseconds: 200),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
+                          child: Text(
+                            state.article.id.toString(),
+                            //DateFormat.yMMMd().format(state.article.releaseDate),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
-                    ),
+                      button,
+                    ],
                   ),
-                  button,
-                ],
-              ),
-            )
-          ],
-        ),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }

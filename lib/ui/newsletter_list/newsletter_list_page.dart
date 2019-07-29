@@ -71,16 +71,6 @@ class _NewsletterListPageState extends State<NewsletterListPage> {
         },
         child: Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list),
-          title: Text("Newsletters"),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.file_download),
-          title: Text("Heruntergeladen"),
-        )
-      ]),
     );
   }
 

@@ -13,10 +13,10 @@ class NewsletterDelete {
   Future deleteNewsletter() async {
     var articles = await _articleRepository.queryArticlesOfNewsletter(_newsletter.id);
 
-    articles.forEach((a) async {
-      await new ArticleDownloadDelete(a, _articleRepository).deleteDownloadedArticle();
-      await _articleRepository.deleteArticle(a);
-    });
+    for (Article article in articles) {
+      await new ArticleDownloadDelete(article, _articleRepository).deleteDownloadedArticle();
+      await _articleRepository.deleteArticle(article);
+    }
 
     await _newsletterRepository.deleteNewsletter(_newsletter);
   }

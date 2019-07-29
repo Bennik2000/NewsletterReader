@@ -17,7 +17,9 @@ class NewsletterArticleUpdater {
 
     List<Article> newArticles = await articleSearcher.fetchNewArticles();
 
-    newArticles.forEach((a) async => await _articleRepository.saveArticleForNewsletter(_newsletter.id, a));
+    for (Article article in newArticles) {
+      await _articleRepository.saveArticleForNewsletter(_newsletter.id, article);
+    }
 
     _newsletter.lastUpdated = DateTime.now();
     await _newsletterRepository.saveNewsletter(_newsletter);

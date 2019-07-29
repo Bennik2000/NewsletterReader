@@ -35,10 +35,11 @@ class ArticleState with ChangeNotifier {
         .downloadArticle();
 
     isDownloading = false;
+
     notifyListeners();
   }
 
-  Future deleteArticle() async {
+  Future deleteDownloadedArticle() async {
     await kiwi.Container()
         .resolve<ArticleDownloadDeleteFactory>()
         .getNewArticleDownloadDeleteInstance(article)

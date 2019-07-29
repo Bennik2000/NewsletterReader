@@ -1,4 +1,5 @@
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/articles/article_delete.dart';
 import 'package:newsletter_reader/business/articles/article_download_delete.dart';
 import 'package:newsletter_reader/business/articles/article_downloader.dart';
 import 'package:newsletter_reader/business/articles/article_thumbnail_creator.dart';
@@ -25,8 +26,9 @@ void inject() {
       ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()))
-      ..registerFactory<PdfToImageRenderer, NativePdfToImageRenderer>((c) => NativePdfToImageRenderer())
+      ..registerFactory((c) => ArticleDeleteFactory(c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleThumbnailCreatorFactory(c.resolve(), c.resolve(), c.resolve()))
+      ..registerFactory<PdfToImageRenderer, NativePdfToImageRenderer>((c) => NativePdfToImageRenderer())
       ..registerFactory<Notificator, LocalNotificator>((c) => LocalNotificator());
   } catch (e) {}
 }
