@@ -10,18 +10,24 @@ class ArticleDownloadDelete {
   ArticleDownloadDelete(this._article, this._articleRepository);
 
   Future deleteDownloadedArticle() async {
-    if (_article.storagePath != null) {
-      File file = File.fromUri(Uri.file(_article.storagePath));
-
-      if (await file.exists()) {
-        await file.delete();
-      }
-    }
+    await deleteFile(_article.storagePath);
+    await deleteFile(_article.thumbnailPath);
 
     _article.isDownloaded = false;
     _article.storagePath = null;
+    _article.thumbnailPath = null;
     _article.downloadDate = null;
     _articleRepository.saveArticle(_article);
+  }
+
+  Future deleteFile(String path) async {
+    if (path == null) return;
+
+    File file = File.fromUri(Uri.file(path));
+
+    if (await file.exists()) {
+      await file.delete();
+    }
   }
 }
 

@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
 import 'package:provider/provider.dart';
 
 import 'article_placeholder.dart';
+import 'article_thumbnail.dart';
 
 class ArticleCard extends StatelessWidget {
   final double borderRadius = 16;
@@ -21,50 +20,14 @@ class ArticleCard extends StatelessWidget {
     Widget image;
 
     if (state.article.thumbnailPath != null) {
-      image = Stack(
-        children: <Widget>[
-          Positioned(
-            top: borderRadius,
-            bottom: borderRadius,
-            left: 0,
-            right: 0,
-            child: Container(
-              child: Ink.image(
-                image: FileImage(File.fromUri(Uri.file(state.article.thumbnailPath))),
-                child: Container(),
-              ),
-            ),
-          ),
-          Positioned(
-            top: borderRadius,
-            bottom: borderRadius,
-            left: 0,
-            right: 0,
-            child: Ink(
-              child: Container(),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.white.withOpacity(0.0),
-                    Colors.white,
-                  ],
-                  stops: [0.0, 0.75],
-                ),
-              ),
-            ),
-          )
-        ],
+      image = ArticleThumbnail(
+        borderRadius: borderRadius,
+        thumbnailPath: state.article.thumbnailPath,
       );
     } else {
-      image = Positioned(
+      image = Padding(
         child: ArticlePlaceholder(state.article.id % 3),
-        top: 8,
-        bottom: 24,
-        left: 0,
-        right: 0,
+        padding: EdgeInsets.fromLTRB(0, 8, 0, 24),
       );
     }
 
@@ -110,7 +73,10 @@ class ArticleCard extends StatelessWidget {
         onTap: state.articleClicked,
         child: Stack(
           children: <Widget>[
-            image,
+            AnimatedSwitcher(
+              child: image,
+              duration: Duration(milliseconds: 200),
+            ),
             Align(
               alignment: Alignment.bottomLeft,
               child: Row(
