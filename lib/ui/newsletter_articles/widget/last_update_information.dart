@@ -11,12 +11,12 @@ class LastUpdatedInformation extends StatelessWidget {
         if (value.newsletter?.lastUpdated != null) {
           return Text(
             getPrettyLastUpdatedString(value.newsletter?.lastUpdated),
-            style: TextStyle(color: Colors.black54),
+            style: Theme.of(context).textTheme.body1,
           );
         } else {
           return Text(
             "Noch nie aktualisiert",
-            style: TextStyle(color: Colors.black54),
+            style: Theme.of(context).textTheme.body1,
           );
         }
       },

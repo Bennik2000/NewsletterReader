@@ -17,17 +17,20 @@ class ArticlesTitle extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                 child: Icon(
                   Icons.import_contacts,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryTextTheme.title.color,
                 ),
               ),
               Flexible(
                 fit: FlexFit.loose,
                 child: Consumer<NewsletterState>(
                   builder: (BuildContext context, NewsletterState state, _) => Text(
-                        state.newsletter.name,
-                        style: TextStyle(fontSize: 35, color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    state.newsletter.name,
+                    style: TextStyle(
+                      fontSize: 35,
+                      color: Theme.of(context).primaryTextTheme.title.color,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ],

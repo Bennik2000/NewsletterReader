@@ -91,7 +91,7 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Verfügbare Ausgaben",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                style: Theme.of(context).textTheme.headline,
               ),
             ),
             Padding(
@@ -111,7 +111,9 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
                   opacity: value.error != null ? 1 : 0,
                   child: Text(
                     value.error ?? "",
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(
+                      color: Theme.of(context).errorColor,
+                    ),
                   ),
                 ),
               ),

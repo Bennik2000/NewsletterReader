@@ -12,11 +12,11 @@ class ArticleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Consumer(
-      builder: (BuildContext context, ArticleState state, _) => buildCard(state),
+      builder: (BuildContext context, ArticleState state, _) => buildCard(context, state),
     );
   }
 
-  Widget buildCard(ArticleState state) {
+  Widget buildCard(BuildContext context, ArticleState state) {
     Widget image;
 
     if (state.article.thumbnailPath != null) {
@@ -49,7 +49,7 @@ class ArticleCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
           icon: Icon(Icons.delete_outline),
-          color: Colors.amber.shade500,
+          color: Theme.of(context).accentColor,
           onPressed: state.deleteArticle,
         ),
       );
@@ -59,7 +59,7 @@ class ArticleCard extends StatelessWidget {
         child: IconButton(
           padding: EdgeInsets.all(0),
           icon: Icon(Icons.file_download),
-          color: Colors.amber.shade500,
+          color: Theme.of(context).accentColor,
           onPressed: state.downloadArticle,
         ),
       );

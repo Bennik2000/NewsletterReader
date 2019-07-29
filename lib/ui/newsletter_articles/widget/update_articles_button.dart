@@ -7,10 +7,10 @@ class UpdateArticlesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<NewsletterState>(
       builder: (BuildContext context, NewsletterState value, Widget child) => FlatButton(
-            onPressed: value.isUpdating || value.isLoading ? null : value.updateArticles,
-            child: Text("Aktualisieren".toUpperCase()),
-            textColor: Colors.amber,
-          ),
+        onPressed: value.isUpdating || value.isLoading ? null : value.updateArticles,
+        child: Text("Aktualisieren".toUpperCase()),
+        textColor: Theme.of(context).accentColor,
+      ),
     );
   }
 }

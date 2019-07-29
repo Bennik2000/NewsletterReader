@@ -8,7 +8,7 @@ class ArticlesPageBackground extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Container(
-            color: Colors.green,
+            color: Theme.of(context).primaryColor,
           ),
           flex: 1,
         ),

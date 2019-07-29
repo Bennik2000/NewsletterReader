@@ -38,8 +38,8 @@ class ArticleThumbnail extends StatelessWidget {
                 begin: FractionalOffset.topCenter,
                 end: FractionalOffset.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.0),
-                  Colors.white,
+                  Theme.of(context).cardColor.withOpacity(0),
+                  Theme.of(context).cardColor,
                 ],
                 stops: [0.0, 0.75],
               ),
