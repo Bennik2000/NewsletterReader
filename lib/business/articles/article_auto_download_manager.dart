@@ -1,5 +1,6 @@
 import 'package:newsletter_reader/business/notification/notificator.dart';
 import 'package:newsletter_reader/business/util/cancellation_token.dart';
+import 'package:newsletter_reader/data/network/connectivity_information.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/model/newsletter.dart';
@@ -16,6 +17,8 @@ class ArticleAutoDownloadManager {
 
   Future tick(CancellationToken token) async {
     if (token.isCancelled) return;
+
+    if (!await new ConnectivityInformation().isWifiAvailable()) return;
 
     var newsletters = await newsletterRepository.queryNewsletters();
 
