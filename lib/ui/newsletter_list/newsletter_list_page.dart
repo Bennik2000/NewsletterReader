@@ -1,82 +1,59 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
 import 'package:newsletter_reader/model/model.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles_page.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_bloc.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_event.dart';
+import 'package:newsletter_reader/ui/newsletter_list/state/newsletter_list_state.dart';
+import 'package:provider/provider.dart';
 
-class NewsletterListPage extends StatefulWidget {
-  @override
-  _NewsletterListPageState createState() => _NewsletterListPageState();
-}
-
-class _NewsletterListPageState extends State<NewsletterListPage> {
-  final NewsletterListBloc _newsletterListBloc = new NewsletterListBloc(kiwi.Container().resolve());
-
-  _NewsletterListPageState() {
-    _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-  }
-
+class NewsletterListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Newsletters"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.import_export),
-            onPressed: () async {
-              var path = await FilePicker.getFilePath();
+    return ChangeNotifierProvider(
+      builder: (BuildContext context) {
+        var state = new NewsletterListState(kiwi.Container().resolve());
 
-              new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+        state.loadNewsletters();
+
+        return state;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Newsletters"),
+          actions: <Widget>[
+            new Consumer(
+              builder: (BuildContext context, NewsletterListState state, Widget child) => IconButton(
+                icon: Icon(Icons.import_export),
+                onPressed: () async {
+                  var path = await FilePicker.getFilePath();
+                  await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+
+                  state.loadNewsletters();
+                },
+              ),
+            )
+          ],
+        ),
+        body: NewsletterList(),
+        floatingActionButton: Consumer(
+          builder: (BuildContext context, NewsletterListState state, _) => FloatingActionButton(
+            onPressed: () async {
+              await Navigator.of(context).push(
+                new MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return new NewsletterEditPage(new Newsletter());
+                  },
+                ),
+              );
+
+              state.loadNewsletters();
             },
-          )
-        ],
-      ),
-      body: BlocProvider(
-        bloc: _newsletterListBloc,
-        child: Center(
-          child: NewsletterList(
-            onNewsletterTap: (Newsletter newsletter) {
-              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                return new NewsletterArticlesPage(
-                  newsletter: newsletter,
-                );
-              })).then((value) {
-                _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-              });
-            },
-            onLongPress: (Newsletter newsletter) {
-              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                return new NewsletterEditPage(newsletter);
-              })).then((value) {
-                _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-              });
-            },
+            child: Icon(Icons.add),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-            return new NewsletterEditPage(new Newsletter());
-          })).then((value) {
-            _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-          });
-        },
-        child: Icon(Icons.add),
-      ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _newsletterListBloc.dispose();
   }
 }
