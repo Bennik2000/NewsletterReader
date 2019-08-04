@@ -8,6 +8,10 @@ class NativePdfToImageRenderer extends PdfToImageRenderer {
 
   @override
   Future renderPdfToImage(String file, String outputFile, int pageIndex) async {
-    await _platform.invokeMethod('renderPdfToImage', {"file": file, "outputFile": outputFile, "pageIndex": pageIndex});
+    try {
+      await _platform.invokeMethod('renderPdfToImage', {"file": file, "outputFile": outputFile, "pageIndex": pageIndex});
+    } catch (e) {
+      print(e);
+    }
   }
 }

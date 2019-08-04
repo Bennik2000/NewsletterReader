@@ -1,1 +1,3 @@
 "D:\Benedikt Kolb\Documents\Android\android-sdk\platform-tools\adb.exe" shell cmd jobscheduler run -f de.bennik2000.newsletter_reader 999
+
+pause

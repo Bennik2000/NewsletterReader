@@ -16,13 +16,13 @@ class ArticleThumbnailCreator {
 
   Future createThumbnail() async {
     var directory = path.join(
-      "newsletter_" + _newsletter.id.toString(),
+      "newsletter_${_newsletter.id.toString()}",
       _article.id.toString(),
     );
 
     var thumbnailFile = await _fileDownloadRepository.getFile(
       directory,
-      "thumbnail_" + (_article.originalFilename ?? _article.id.toString()),
+      "thumbnail_${_article.id.toString()}.png",
     );
 
     await _pdfToImageRenderer.renderPdfToImage(_article.storagePath, thumbnailFile.path, 0);

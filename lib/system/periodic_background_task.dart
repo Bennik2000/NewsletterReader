@@ -27,6 +27,8 @@ class PeriodicBackgroundTask {
   Future backgroundTaskHandler(DateTime now, bool isHeadless) async {
     await background_main.main().catchError((e) {
       print(e);
+    }).catchError((e) {
+      print(e);
     }).whenComplete(() {
       BackgroundFetch.finish();
     });

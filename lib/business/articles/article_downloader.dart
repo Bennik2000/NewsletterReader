@@ -25,9 +25,11 @@ class ArticleDownloader {
       _article.id.toString(),
     );
 
+    String fileName = getFilename();
+
     var file = await _fileDownloadRepository.getFile(
       directory,
-      _article.originalFilename ?? _article.id.toString(),
+      fileName,
     );
 
     try {
@@ -47,6 +49,16 @@ class ArticleDownloader {
 
       _article.isDownloaded = false;
     }
+  }
+
+  String getFilename() {
+    var fileName = _article.originalFilename ?? _newsletter.name ?? _article.id.toString();
+
+    if (!fileName.endsWith(".pdf")) {
+      fileName += ".pdf";
+    }
+
+    return fileName;
   }
 
   void setArticleDownloaded(File file) {
