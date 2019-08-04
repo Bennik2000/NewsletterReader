@@ -2,14 +2,17 @@ import 'package:newsletter_reader/business/newsletters/newsletter_article_update
 import 'package:newsletter_reader/business/notification/notificator.dart';
 import 'package:newsletter_reader/business/util/cancellation_token.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/data/repository/settings_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterAutoUpdateManager {
   final NewsletterRepository newsletterRepository;
   final NewsletterArticleUpdaterFactory newsletterUpdaterFactory;
+  final SettingsRepository settingsRepository;
   final Notificator notificator;
 
-  NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory, this.notificator);
+  NewsletterAutoUpdateManager(
+      this.newsletterRepository, this.newsletterUpdaterFactory, this.notificator, this.settingsRepository);
 
   Future tick(DateTime now, CancellationToken token) async {
     var newsletters = await newsletterRepository.queryNewsletters();
@@ -21,8 +24,9 @@ class NewsletterAutoUpdateManager {
 
       try {
         await _updateNewsletterIfNeeded(now, newsletter);
-      } on Exception catch (e) {
+      } catch (e) {
         print(e);
+        await _showErrorWhileUpdatingNotification(newsletter);
       }
     }
   }
@@ -32,8 +36,9 @@ class NewsletterAutoUpdateManager {
       var newNewsletters = await newsletterUpdaterFactory.getNewArticleUpdaterInstance(newsletter).updateArticles();
 
       if (newNewsletters.isNotEmpty) {
-        notificator.showSimpleTextNotification(
-            "Neue Beiträge für ${newsletter.name}", "Es gibt neue Beiträge für ${newsletter.name}");
+        await _showNewArticlesNotification(newsletter);
+      } else {
+        await _showNoArticlesNotification(newsletter);
       }
     }
   }
@@ -107,5 +112,26 @@ class NewsletterAutoUpdateManager {
     }
 
     return nextUpdate;
+  }
+
+  Future _showNewArticlesNotification(Newsletter newsletter) async {
+    if (await settingsRepository.getNotifyOnNewArticles()) {
+      await notificator.showSimpleTextNotification(
+          "Neue Beiträge für ${newsletter.name}", "Es gibt neue Beiträge für ${newsletter.name}");
+    }
+  }
+
+  Future _showNoArticlesNotification(Newsletter newsletter) async {
+    if (await settingsRepository.getNotifyOnNoNewArticles()) {
+      await notificator.showSimpleTextNotification(
+          "Keine neuen Beiträge für ${newsletter.name}", "Es wurden keine neue Beiträge für ${newsletter.name} gefudnen");
+    }
+  }
+
+  Future _showErrorWhileUpdatingNotification(Newsletter newsletter) async {
+    if (await settingsRepository.getNotifyOnUpdateError()) {
+      await notificator.showSimpleTextNotification(
+          "${newsletter.name} konnte nicht aktualisiert werden", "Es trat ein Fehler während des Aktualisieren auf");
+    }
   }
 }

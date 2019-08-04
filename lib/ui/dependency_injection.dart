@@ -11,6 +11,7 @@ import 'package:newsletter_reader/data/filestorage/file_download_repository.dart
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
+import 'package:newsletter_reader/data/repository/settings_repository.dart';
 import 'package:newsletter_reader/platform/native_pdf_to_image_renderer.dart';
 
 import 'local_notificator.dart';
@@ -23,6 +24,7 @@ void inject() {
       ..registerFactory((c) => ArticleRepository(c.resolve()))
       ..registerFactory((c) => FileDownloadRepository())
       ..registerFactory((c) => FileDownloader())
+      ..registerFactory((c) => SettingsRepository())
       ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()))

@@ -12,19 +12,10 @@ import 'package:newsletter_reader/ui/newsletter_articles/widget/no_articles_empt
 import 'package:newsletter_reader/ui/newsletter_articles/widget/update_articles_button.dart';
 import 'package:provider/provider.dart';
 
-class NewsletterArticlesPage extends StatefulWidget {
-  final Newsletter newsletter;
-
-  const NewsletterArticlesPage({Key key, this.newsletter}) : super(key: key);
-
-  @override
-  _NewsletterArticlesPageState createState() => _NewsletterArticlesPageState(newsletter);
-}
-
-class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
+class NewsletterArticlesPage extends StatelessWidget {
   final Newsletter _newsletter;
 
-  _NewsletterArticlesPageState(Newsletter newsletter) : _newsletter = newsletter {}
+  const NewsletterArticlesPage(this._newsletter);
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +40,14 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
         child: Stack(
           children: <Widget>[
             ArticlesPageBackground(),
-            buildBody(),
+            buildBody(context),
           ],
         ),
       ),
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     return Flex(
       children: <Widget>[
         Flexible(
@@ -65,14 +56,14 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
         ),
         Flexible(
           flex: 7,
-          child: buildContent(),
+          child: buildContent(context),
         )
       ],
       direction: Axis.vertical,
     );
   }
 
-  Widget buildContent() {
+  Widget buildContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Card(

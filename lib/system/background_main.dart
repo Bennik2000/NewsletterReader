@@ -13,12 +13,14 @@ Future main() async {
     kiwi.Container().resolve(),
     kiwi.Container().resolve(),
     kiwi.Container().resolve(),
+    kiwi.Container().resolve(),
   );
 
   var cancellationToken = new CancellationToken(startDateTime.add(Duration(seconds: 25)));
   await autoUpdateManager.tick(startDateTime, cancellationToken);
 
   var autoDownloadManager = new ArticleAutoDownloadManager(
+    kiwi.Container().resolve(),
     kiwi.Container().resolve(),
     kiwi.Container().resolve(),
     kiwi.Container().resolve(),

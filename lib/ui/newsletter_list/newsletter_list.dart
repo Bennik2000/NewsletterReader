@@ -43,7 +43,7 @@ class NewsletterList extends StatelessWidget {
               new MaterialPageRoute(
                 builder: (BuildContext context) {
                   return new NewsletterArticlesPage(
-                    newsletter: newsletter,
+                    newsletter,
                   );
                 },
               ),

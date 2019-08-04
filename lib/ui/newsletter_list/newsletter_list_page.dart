@@ -6,6 +6,7 @@ import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list.dart';
 import 'package:newsletter_reader/ui/newsletter_list/state/newsletter_list_state.dart';
+import 'package:newsletter_reader/ui/settings/settings_page.dart';
 import 'package:provider/provider.dart';
 
 class NewsletterListPage extends StatelessWidget {
@@ -33,7 +34,19 @@ class NewsletterListPage extends StatelessWidget {
                   state.loadNewsletters();
                 },
               ),
-            )
+            ),
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () async {
+                await Navigator.of(context).push(
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return new SettingsPage();
+                    },
+                  ),
+                );
+              },
+            ),
           ],
         ),
         body: NewsletterList(),
