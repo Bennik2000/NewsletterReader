@@ -1,7 +1,5 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list.dart';
@@ -24,28 +22,21 @@ class NewsletterListPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("Newsletters"),
           actions: <Widget>[
-            new Consumer(
+            Consumer(
               builder: (BuildContext context, NewsletterListState state, Widget child) => IconButton(
-                icon: Icon(Icons.import_export),
+                icon: Icon(Icons.settings),
                 onPressed: () async {
-                  var path = await FilePicker.getFilePath();
-                  await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+                  await Navigator.of(context).push(
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return new SettingsPage();
+                      },
+                    ),
+                  );
 
-                  state.loadNewsletters();
+                  await state.loadNewsletters();
                 },
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () async {
-                await Navigator.of(context).push(
-                  new MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return new SettingsPage();
-                    },
-                  ),
-                );
-              },
             ),
           ],
         ),

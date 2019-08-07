@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletters/newsletter_export.dart';
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles_page.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
@@ -52,19 +54,74 @@ class NewsletterList extends StatelessWidget {
             state.loadNewsletters();
           },
           onLongPress: (Newsletter newsletter) async {
-            await Navigator.of(context).push(
-              new MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return new NewsletterEditPage(newsletter);
-                },
-              ),
-            );
-
-            state.loadNewsletters();
+            await onNewsletterLongPress(context, newsletter, state);
           },
         );
       },
       itemCount: state.newsletters.length,
     );
+  }
+
+  Future onNewsletterLongPress(BuildContext context, Newsletter newsletter, NewsletterListState state) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new ListTile(
+              leading: new Icon(Icons.edit),
+              title: new Text('Bearbeiten'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await onEditNewsletterClick(context, newsletter, state);
+              },
+            ),
+            new ListTile(
+              leading: new Icon(Icons.share),
+              title: new Text('Exportieren'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await onExportNewsletterClick(newsletter, context);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future onExportNewsletterClick(Newsletter newsletter, BuildContext context) async {
+    await new NewsletterExport(newsletter, kiwi.Container().resolve()).shareNewsletter();
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Newsletter exportiert"),
+          content: new Text("Der Newsletter wurde exportiert"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future onEditNewsletterClick(BuildContext context, Newsletter newsletter, NewsletterListState state) async {
+    await Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (BuildContext context) {
+          return new NewsletterEditPage(newsletter);
+        },
+      ),
+    );
+
+    await state.loadNewsletters();
   }
 }

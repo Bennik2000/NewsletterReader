@@ -116,8 +116,6 @@ class ArticleCard extends StatelessWidget {
                 },
                 context: context,
               );
-
-              //await newsletterState.deleteArticle(state.article);
             },
             child: Stack(
               children: <Widget>[

@@ -29,6 +29,7 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
       builder: (c) => new NewsletterEditState(_newsletter, kiwi.Container().resolve()),
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           title: Text("Newsletter bearbeiten"),
           actions: <Widget>[
             Consumer(
@@ -54,8 +55,9 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Placeholder(
-            fallbackHeight: 150,
+          Container(
+            height: 150,
+            color: Colors.green,
           ),
           Padding(
             padding: const EdgeInsets.all(16),

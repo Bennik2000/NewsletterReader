@@ -1,5 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
 import 'package:provider/provider.dart';
 
 import 'state/settings_state.dart';
@@ -11,6 +13,15 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Settings'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.import_export),
+              onPressed: () async {
+                var path = await FilePicker.getFilePath();
+                await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+              },
+            ),
+          ],
         ),
         body: buildBody(),
       ),
@@ -53,7 +64,7 @@ class SettingsPage extends StatelessWidget {
           return CheckboxListTile(
             value: state.notifyOnUpdateError,
             onChanged: (bool value) => state.notifyOnUpdateError = value,
-            title: Text("Benachrichtigung, wenn die aktualisierung fehlschlug"),
+            title: Text("Benachrichtigung, wenn die Aktualisierung fehlschlug"),
           );
         }),
       ],

@@ -8,6 +8,7 @@ import 'package:newsletter_reader/business/notification/notificator.dart';
 import 'package:newsletter_reader/business/pdf/pdf_to_image_renderer.dart';
 import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
 import 'package:newsletter_reader/data/filestorage/file_download_repository.dart';
+import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
@@ -23,6 +24,7 @@ void inject() {
       ..registerFactory((c) => NewsletterRepository(c.resolve()))
       ..registerFactory((c) => ArticleRepository(c.resolve()))
       ..registerFactory((c) => FileDownloadRepository())
+      ..registerFactory((c) => FilePublicRepository())
       ..registerFactory((c) => FileDownloader())
       ..registerFactory((c) => SettingsRepository())
       ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
