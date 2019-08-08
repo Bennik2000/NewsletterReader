@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/state/newsletter_edit_state.dart';
+import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 class NewsletterEditPage extends StatefulWidget {
@@ -46,18 +47,18 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
             ),
           ],
         ),
-        body: buildPageContent(),
+        body: buildPageContent(context),
       ),
     );
   }
 
-  Widget buildPageContent() {
+  Widget buildPageContent(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           Container(
             height: 150,
-            color: Colors.green,
+            color: Theme.of(context).primaryColor,
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -78,25 +79,27 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                 SizedBox(
                   height: 32,
                 ),
-                Consumer(
-                  builder: (BuildContext context, NewsletterEditState state, _) => InputDecorator(
-                    child: DropdownButton(
-                      isExpanded: true,
-                      items: getUpdateStrategyMenuItems(),
-                      onChanged: (value) {
-                        state.updateStrategy = value;
-                      },
-                      value: state.newsletter.updateStrategy,
-                      underline: Container(),
-                      isDense: true,
-                    ),
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.add_shopping_cart),
-                      labelText: "Update Strategie",
-                      helperText: "Gibt an, wie nach neuen Ausgaben gesucht werden soll",
-                      errorText: state.updateStrategyError,
+                Padding(
+                  child: Consumer(
+                    builder: (BuildContext context, NewsletterEditState state, _) => InputDecorator(
+                      child: DropdownButton(
+                        isExpanded: true,
+                        items: getUpdateStrategyMenuItems(),
+                        onChanged: (value) {
+                          state.updateStrategy = value;
+                        },
+                        value: state.newsletter.updateStrategy,
+                        underline: Container(),
+                        isDense: true,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Update Strategie",
+                        helperText: "Gibt an, wie nach neuen Ausgaben gesucht werden soll",
+                        errorText: state.updateStrategyError,
+                      ),
                     ),
                   ),
+                  padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
                 ),
                 SizedBox(
                   height: 16,
@@ -129,27 +132,6 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                       Consumer(
                         builder: (BuildContext context, NewsletterEditState state, _) => Checkbox(
                           onChanged: (isChecked) {
-                            state.autoDownloadEnabled = isChecked;
-                          },
-                          value: state.newsletter.isAutoDownloadEnabled ?? false,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Neue Beiträge automatisch herunterladen",
-                          overflow: TextOverflow.clip,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                  child: Row(
-                    children: <Widget>[
-                      Consumer(
-                        builder: (BuildContext context, NewsletterEditState state, _) => Checkbox(
-                          onChanged: (isChecked) {
                             state.autoUpdateEnabled = isChecked;
                           },
                           value: state.newsletter.isAutoUpdateEnabled ?? false,
@@ -165,25 +147,50 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
                 Consumer(
                   builder: (BuildContext context, NewsletterEditState state, _) => AnimatedSwitcher(
                     child: state.newsletter.isAutoUpdateEnabled ?? false
-                        ? Consumer(
-                            builder: (BuildContext context, NewsletterEditState state, _) => InputDecorator(
-                              child: DropdownButton(
-                                isExpanded: true,
-                                items: getUpdateIntervalMenuItems(),
-                                onChanged: (value) {
-                                  state.updateInterval = value;
-                                },
-                                value: state.newsletter.updateInterval,
-                                underline: Container(),
-                                isDense: true,
+                        ? Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Consumer(
+                                      builder: (BuildContext context, NewsletterEditState state, _) => Checkbox(
+                                        onChanged: (isChecked) {
+                                          state.autoDownloadEnabled = isChecked;
+                                        },
+                                        value: state.newsletter.isAutoDownloadEnabled ?? false,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "Neue Beiträge automatisch herunterladen",
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.watch_later),
-                                labelText: "Update Interval",
-                                helperText: "Das Interval, mit dem neue Ausgaben gesucht werden",
-                                errorText: state.updateIntervalError,
-                              ),
-                            ),
+                              Consumer(
+                                builder: (BuildContext context, NewsletterEditState state, _) => InputDecorator(
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    items: getUpdateIntervalMenuItems(),
+                                    onChanged: (value) {
+                                      state.updateInterval = value;
+                                    },
+                                    value: state.newsletter.updateInterval,
+                                    underline: Container(),
+                                    isDense: true,
+                                  ),
+                                  decoration: InputDecoration(
+                                    icon: Icon(Icons.watch_later),
+                                    labelText: "Update Interval",
+                                    helperText: "Das Interval, mit dem neue Ausgaben gesucht werden",
+                                    errorText: state.updateIntervalError,
+                                  ),
+                                ),
+                              )
+                            ],
                           )
                         : Container(),
                     duration: Duration(milliseconds: 200),
@@ -229,26 +236,18 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
     state.newsletter.url = _urlTextEditingController.text;
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text("${state.newsletter.name} löschen"),
-              content: Text("Der Newsletter ${state.newsletter.name} wird endgültig gelöscht."),
-              actions: <Widget>[
-                new FlatButton(
-                  child: new Text("Abbrechen".toUpperCase()),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                new FlatButton(
-                  child: new Text("Löschen".toUpperCase()),
-                  onPressed: () async {
-                    await state.delete();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => createAlertDialog(
+        context,
+        "${state.newsletter.name} löschen",
+        "Der Newsletter ${state.newsletter.name} wird endgültig gelöscht.",
+        okAction: () async {
+          await state.delete();
+          Navigator.of(context).pop();
+        },
+        cancelAction: () {},
+        okText: "Löschen",
+      ),
+    );
   }
 }

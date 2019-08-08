@@ -14,11 +14,19 @@ class SettingsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Settings'),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.import_export),
+            FlatButton(
+              child: Text(
+                "Import".toUpperCase(),
+                style: TextStyle(
+                  color: Theme.of(context).primaryTextTheme.button.color,
+                ),
+              ),
+              shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
               onPressed: () async {
                 var path = await FilePicker.getFilePath();
-                await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+                if (path != null) {
+                  await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
+                }
               },
             ),
           ],

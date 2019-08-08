@@ -6,6 +6,7 @@ import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles_pag
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
 import 'package:newsletter_reader/ui/newsletter_list/state/newsletter_list_state.dart';
 import 'package:newsletter_reader/ui/newsletter_list/widgets/newsletters_empty_state.dart';
+import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/newsletter_card.dart';
@@ -96,20 +97,13 @@ class NewsletterList extends StatelessWidget {
 
     await showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Newsletter exportiert"),
-          content: new Text("Der Newsletter wurde exportiert"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      builder: (BuildContext context) => createAlertDialog(
+        context,
+        "Newsletter exportiert",
+        "Der Newsletter wurde exportiert",
+        okAction: () => {},
+        cancelAction: null,
+      ),
     );
   }
 
