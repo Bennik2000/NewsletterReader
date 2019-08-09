@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
 import 'package:provider/provider.dart';
@@ -84,8 +85,7 @@ class ArticleCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
                           child: Text(
-                            state.article.id.toString(),
-                            //DateFormat.yMMMd().format(state.article.releaseDate),
+                            DateFormat.yMMMd().format(state.article.releaseDate),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
