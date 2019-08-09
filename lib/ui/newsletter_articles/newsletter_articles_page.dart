@@ -69,22 +69,30 @@ class NewsletterArticlesPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Verfügbare Ausgaben",
-                style: Theme.of(context).textTheme.headline,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  LastUpdatedInformation(),
-                  UpdateArticlesButton(),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Verfügbare Ausgaben",
+                        style: Theme.of(context).textTheme.headline,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: LastUpdatedInformation(),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: UpdateArticlesButton(),
+                )
+              ],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),

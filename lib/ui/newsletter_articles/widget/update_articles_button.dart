@@ -6,10 +6,13 @@ class UpdateArticlesButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<NewsletterState>(
-      builder: (BuildContext context, NewsletterState value, Widget child) => FlatButton(
+      builder: (BuildContext context, NewsletterState value, Widget child) => IconButton(
+        icon: Icon(
+          Icons.refresh,
+          color: Theme.of(context).accentColor,
+        ),
+        iconSize: 28,
         onPressed: value.isUpdating || value.isLoading ? null : value.updateArticles,
-        child: Text("Aktualisieren".toUpperCase()),
-        textColor: Theme.of(context).accentColor,
       ),
     );
   }
