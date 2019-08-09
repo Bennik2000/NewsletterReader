@@ -66,8 +66,6 @@ class NewsletterState with ChangeNotifier {
 
     await _articleDeleteFactory.getNewArticleDeleteInstance(article).deleteArticle();
 
-    print("Deleting Article with id: ${article.id}");
-
     notifyListeners();
   }
 }

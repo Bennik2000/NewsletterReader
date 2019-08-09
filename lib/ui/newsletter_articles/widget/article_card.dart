@@ -11,9 +11,8 @@ class ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (BuildContext context, ArticleState state, _) => buildCard(context, state),
-    );
+    var state = Provider.of<ArticleState>(context);
+    return buildCard(context, state);
   }
 
   Widget buildCard(BuildContext context, ArticleState state) {
