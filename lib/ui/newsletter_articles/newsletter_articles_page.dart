@@ -26,6 +26,7 @@ class NewsletterArticlesPage extends StatelessWidget {
           _newsletter,
           kiwi.Container().resolve(),
           kiwi.Container().resolve(),
+          kiwi.Container().resolve(),
         ),
         child: Stack(
           children: <Widget>[
@@ -122,7 +123,7 @@ class NewsletterArticlesPage extends StatelessWidget {
                 if (state.isLoaded && state.loadedArticles.isEmpty) {
                   widget = NoArticlesEmptyState();
                 } else if (state.isLoaded && state.loadedArticles.isNotEmpty) {
-                  widget = ArticlesList(_newsletter);
+                  widget = ArticlesList();
                 } else {
                   widget = Container();
                 }
