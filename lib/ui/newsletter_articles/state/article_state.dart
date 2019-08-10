@@ -19,9 +19,9 @@ class ArticleState with ChangeNotifier {
 
   ArticleState(this._article, this._newsletter);
 
-  void articleClicked() {
+  Future articleClicked() async {
     if (article.storagePath != null && article.isDownloaded) {
-      OpenFile.open(article.storagePath);
+      await OpenFile.open(article.storagePath);
     }
   }
 

@@ -65,7 +65,32 @@ class ArticleCard extends StatelessWidget {
         builder: (BuildContext context, NewsletterState newsletterState, _) {
           return InkWell(
             borderRadius: BorderRadius.circular(borderRadius),
-            onTap: state.articleClicked,
+            onTap: () async {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return new Dialog(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: new Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                            child: new CircularProgressIndicator(),
+                          ),
+                          new Text("Opening..."),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+
+              await state.articleClicked();
+
+              Navigator.of(context).pop();
+            },
             onLongPress: () async {
               await articleLongPress(state, newsletterState, context);
             },
