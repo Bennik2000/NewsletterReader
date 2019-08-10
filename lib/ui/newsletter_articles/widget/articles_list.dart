@@ -21,7 +21,10 @@ class ArticlesList extends StatelessWidget {
               key: ObjectKey(state.loadedArticles[i].id),
               padding: const EdgeInsets.all(4.0),
               child: ChangeNotifierProvider(
-                builder: (c) => new ArticleState(state.loadedArticles[i], state.newsletter),
+                builder: (c) {
+                  print("build ArticleState for $i");
+                  return new ArticleState(state.loadedArticles[i], state.newsletter);
+                },
                 child: new ArticleCard(),
               ),
             );

@@ -1,5 +1,5 @@
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
-import 'package:newsletter_reader/business/notification/notificator.dart';
+import 'package:newsletter_reader/business/notification/notifier.dart';
 import 'package:newsletter_reader/business/util/cancellation_token.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/data/repository/settings_repository.dart';
@@ -9,10 +9,9 @@ class NewsletterAutoUpdateManager {
   final NewsletterRepository newsletterRepository;
   final NewsletterArticleUpdaterFactory newsletterUpdaterFactory;
   final SettingsRepository settingsRepository;
-  final Notificator notificator;
+  final Notifier notifier;
 
-  NewsletterAutoUpdateManager(
-      this.newsletterRepository, this.newsletterUpdaterFactory, this.notificator, this.settingsRepository);
+  NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory, this.notifier, this.settingsRepository);
 
   Future tick(DateTime now, CancellationToken token) async {
     var newsletters = await newsletterRepository.queryNewsletters();
@@ -116,21 +115,21 @@ class NewsletterAutoUpdateManager {
 
   Future _showNewArticlesNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnNewArticles()) {
-      await notificator.showSimpleTextNotification(
+      await notifier.showSimpleTextNotification(
           "Neue Beiträge für ${newsletter.name}", "Es gibt neue Beiträge für ${newsletter.name}");
     }
   }
 
   Future _showNoArticlesNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnNoNewArticles()) {
-      await notificator.showSimpleTextNotification(
+      await notifier.showSimpleTextNotification(
           "Keine neuen Beiträge für ${newsletter.name}", "Es wurden keine neue Beiträge für ${newsletter.name} gefudnen");
     }
   }
 
   Future _showErrorWhileUpdatingNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnUpdateError()) {
-      await notificator.showSimpleTextNotification(
+      await notifier.showSimpleTextNotification(
           "${newsletter.name} konnte nicht aktualisiert werden", "Es trat ein Fehler während des Aktualisieren auf");
     }
   }

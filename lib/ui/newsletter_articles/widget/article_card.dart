@@ -12,8 +12,9 @@ class ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<ArticleState>(context);
-    return buildCard(context, state);
+    return Consumer(
+      builder: (BuildContext context, ArticleState state, Widget child) => buildCard(context, state),
+    );
   }
 
   Widget buildCard(BuildContext context, ArticleState state) {
@@ -110,7 +111,7 @@ class ArticleCard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
                           child: Text(
-                            DateFormat.yMMMd().format(state.article.releaseDate),
+                            DateFormat.yMMMEd().format(state.article.releaseDate),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

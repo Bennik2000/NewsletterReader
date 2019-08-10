@@ -1,3 +1,3 @@
-abstract class Notificator {
+abstract class Notifier {
   Future showSimpleTextNotification(String title, String text);
 }

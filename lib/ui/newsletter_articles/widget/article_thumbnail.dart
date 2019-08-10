@@ -39,9 +39,10 @@ class ArticleThumbnail extends StatelessWidget {
                 end: FractionalOffset.bottomCenter,
                 colors: [
                   Theme.of(context).cardColor.withOpacity(0),
+                  Theme.of(context).cardColor.withOpacity(0),
                   Theme.of(context).cardColor,
                 ],
-                stops: [0.0, 0.75],
+                stops: [0.0, 0.50, 0.80],
               ),
             ),
           ),

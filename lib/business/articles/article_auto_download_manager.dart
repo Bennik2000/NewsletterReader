@@ -1,4 +1,4 @@
-import 'package:newsletter_reader/business/notification/notificator.dart';
+import 'package:newsletter_reader/business/notification/notifier.dart';
 import 'package:newsletter_reader/business/util/cancellation_token.dart';
 import 'package:newsletter_reader/data/network/connectivity_information.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
@@ -13,10 +13,10 @@ class ArticleAutoDownloadManager {
   final ArticleRepository articleRepository;
   final ArticleDownloaderFactory articleDownloaderFactory;
   final SettingsRepository settingsRepository;
-  final Notificator notificator;
+  final Notifier notifier;
 
-  ArticleAutoDownloadManager(this.newsletterRepository, this.articleRepository, this.articleDownloaderFactory, this.notificator,
-      this.settingsRepository);
+  ArticleAutoDownloadManager(
+      this.newsletterRepository, this.articleRepository, this.articleDownloaderFactory, this.notifier, this.settingsRepository);
 
   Future tick(CancellationToken token) async {
     if (token.isCancelled) return;
@@ -61,21 +61,21 @@ class ArticleAutoDownloadManager {
 
   Future _showArticleDownloadedNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnNewArticlesDownloaded()) {
-      await notificator.showSimpleTextNotification(
+      await notifier.showSimpleTextNotification(
           "Beitrag heruntergeladen", "Es wurde ein neuer Beitrag für ${newsletter.name} heruntergeladen");
     }
   }
 
   Future _showNoWifiNotification() async {
     if (await settingsRepository.getNotifyOnNoWifi()) {
-      await notificator.showSimpleTextNotification("Beiträge konnten nicht heruntergeladen werden",
+      await notifier.showSimpleTextNotification("Beiträge konnten nicht heruntergeladen werden",
           "Es konnten keine Beiträge heruntergeladen werden, da keine WLAN Verbindung bestand");
     }
   }
 
   Future _showErrorWhileDownloadingNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnUpdateError()) {
-      await notificator.showSimpleTextNotification(
+      await notifier.showSimpleTextNotification(
           "Beiträge von ${newsletter.name} konnten nicht heruntergeladen werden", "Es trat ein Fehler während des Downloads auf");
     }
   }
