@@ -3,12 +3,13 @@ import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_list.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_page_background.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_title.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/last_update_information.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/no_articles_empty_state.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/update_articles_button.dart';
 import 'package:provider/provider.dart';
+
+import 'widget/articles_page_background.dart';
 
 class NewsletterArticlesPage extends StatelessWidget {
   final Newsletter _newsletter;
@@ -40,17 +41,17 @@ class NewsletterArticlesPage extends StatelessWidget {
 
   Widget buildBody(BuildContext context) {
     return Flex(
+      direction: Axis.vertical,
       children: <Widget>[
         Flexible(
-          flex: 1,
           child: ArticlesTitle(),
+          flex: 1,
         ),
-        Flexible(
-          flex: 7,
+        Expanded(
           child: buildContent(context),
-        )
+          flex: 6,
+        ),
       ],
-      direction: Axis.vertical,
     );
   }
 
@@ -74,6 +75,8 @@ class NewsletterArticlesPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -137,7 +140,7 @@ class NewsletterArticlesPage extends StatelessWidget {
                 }
 
                 return Flexible(
-                  child: new AnimatedSwitcher(
+                  child: AnimatedSwitcher(
                     duration: Duration(milliseconds: 200),
                     child: widget,
                   ),

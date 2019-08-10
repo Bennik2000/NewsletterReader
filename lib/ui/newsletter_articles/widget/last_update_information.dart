@@ -8,17 +8,18 @@ class LastUpdatedInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<NewsletterState>(
       builder: (BuildContext context, NewsletterState value, Widget child) {
+        String text;
+
         if (value.newsletter?.lastUpdated != null) {
-          return Text(
-            getPrettyLastUpdatedString(value.newsletter?.lastUpdated),
-            style: Theme.of(context).textTheme.body1,
-          );
+          text = getPrettyLastUpdatedString(value.newsletter?.lastUpdated);
         } else {
-          return Text(
-            "Noch nie aktualisiert",
-            style: Theme.of(context).textTheme.body1,
-          );
+          text = "Noch nie aktualisiert";
         }
+
+        return Text(
+          text,
+          style: Theme.of(context).textTheme.body1,
+        );
       },
     );
   }

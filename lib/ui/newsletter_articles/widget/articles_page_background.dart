@@ -10,11 +10,11 @@ class ArticlesPageBackground extends StatelessWidget {
           child: Container(
             color: Theme.of(context).primaryColor,
           ),
-          flex: 1,
+          flex: 2,
         ),
         Flexible(
           child: Container(),
-          flex: 4,
+          flex: 6,
         )
       ],
     );
