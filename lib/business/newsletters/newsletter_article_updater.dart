@@ -10,9 +10,14 @@ class NewsletterArticleUpdater {
   final ArticleRepository _articleRepository;
   final NewsletterRepository _newsletterRepository;
 
+  bool _isUpdating = false;
+  bool get isUpdating => _isUpdating;
+
   NewsletterArticleUpdater(this._newsletter, this._articleRepository, this._newsletterRepository);
 
   Future<List<Article>> updateArticles() async {
+    _isUpdating = true;
+
     var articleSearcher = _getArticleSearcher();
 
     List<Article> newArticles = await articleSearcher.fetchNewArticles();
@@ -23,6 +28,8 @@ class NewsletterArticleUpdater {
 
     _newsletter.lastUpdated = DateTime.now();
     await _newsletterRepository.saveNewsletter(_newsletter);
+
+    _isUpdating = false;
 
     return newArticles;
   }

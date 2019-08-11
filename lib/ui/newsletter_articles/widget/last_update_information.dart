@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 class LastUpdatedInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewsletterState>(
-      builder: (BuildContext context, NewsletterState value, Widget child) {
+    return Consumer(
+      builder: (BuildContext context, NewsletterViewModel value, Widget child) {
         String text;
 
         if (value.newsletter?.lastUpdated != null) {

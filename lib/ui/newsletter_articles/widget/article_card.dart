@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 import 'article_placeholder.dart';
 import 'article_thumbnail.dart';
 
 class ArticleCard extends StatelessWidget {
+  final NewsletterViewModel newsletter;
   final double borderRadius = 16;
+
+  const ArticleCard({Key key, this.newsletter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, ArticleState state, Widget child) => buildCard(context, state),
+      builder: (BuildContext context, ArticleViewModel state, Widget child) => buildCard(context, state),
     );
   }
 
-  Widget buildCard(BuildContext context, ArticleState state) {
+  Widget buildCard(BuildContext context, ArticleViewModel state) {
     Widget image;
 
     if (state.article.thumbnailPath != null) {
@@ -62,83 +64,56 @@ class ArticleCard extends StatelessWidget {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius)),
-      child: Consumer(
-        builder: (BuildContext context, NewsletterState newsletterState, _) {
-          return InkWell(
-            borderRadius: BorderRadius.circular(borderRadius),
-            onTap: () async {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return new Dialog(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(borderRadius),
+        onTap: () async {
+          await readArticle(context, state);
+        },
+        onLongPress: () async {
+          await articleLongPress(state, newsletter, context);
+        },
+        child: Stack(
+          children: <Widget>[
+            AnimatedSwitcher(
+              child: image,
+              duration: Duration(milliseconds: 200),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: new Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                            child: new CircularProgressIndicator(),
-                          ),
-                          new Text("Opening..."),
-                        ],
+                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
+                      child: Text(
+                        DateFormat.yMMMEd().format(state.article.releaseDate),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  );
-                },
-              );
-
-              await state.articleClicked();
-
-              Navigator.of(context).pop();
-            },
-            onLongPress: () async {
-              await articleLongPress(state, newsletterState, context);
-            },
-            child: Stack(
-              children: <Widget>[
-                AnimatedSwitcher(
-                  child: image,
-                  duration: Duration(milliseconds: 200),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
-                          child: Text(
-                            DateFormat.yMMMEd().format(state.article.releaseDate),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      button,
-                    ],
                   ),
-                )
-              ],
-            ),
-          );
-        },
+                  button,
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Future articleLongPress(ArticleState state, NewsletterState newsletterState, BuildContext context) async {
+  Future articleLongPress(ArticleViewModel article, NewsletterViewModel newsletter, BuildContext context) async {
     await showModalBottomSheet(
       builder: (BuildContext context) {
         var buttons = <Widget>[];
 
-        if (state.article.isDownloaded ?? false) {
+        if (article.article.isDownloaded ?? false) {
           buttons.add(new ListTile(
             leading: new Icon(Icons.import_contacts),
             title: new Text('Beitrag Lesen'),
-            onTap: () {
-              state.articleClicked();
+            onTap: () async {
+              await readArticle(context, article);
               Navigator.of(context).pop();
             },
           ));
@@ -147,7 +122,7 @@ class ArticleCard extends StatelessWidget {
             leading: new Icon(Icons.file_download),
             title: new Text('Download entfernen'),
             onTap: () async {
-              await state.deleteDownloadedArticle();
+              await article.deleteDownloadedArticle();
               Navigator.of(context).pop();
             },
           ));
@@ -157,7 +132,7 @@ class ArticleCard extends StatelessWidget {
             title: new Text('Herunterladen'),
             onTap: () async {
               Navigator.of(context).pop();
-              await state.downloadArticle();
+              await article.downloadArticle();
             },
           ));
         }
@@ -172,7 +147,7 @@ class ArticleCard extends StatelessWidget {
           ),
           onTap: () async {
             Navigator.of(context).pop();
-            newsletterState.deleteArticle(state.article);
+            newsletter.deleteArticle(article);
           },
         ));
 
@@ -183,5 +158,32 @@ class ArticleCard extends StatelessWidget {
       },
       context: context,
     );
+  }
+
+  Future readArticle(BuildContext context, ArticleViewModel state) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                  child: new CircularProgressIndicator(),
+                ),
+                new Text("Opening..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    await state.articleClicked();
+
+    Navigator.of(context).pop();
   }
 }

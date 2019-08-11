@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'newsletter_list/newsletter_list_page.dart';
+import 'package:newsletter_reader/ui/newsletter_list/newsletters_master_detail_container.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         brightness: Brightness.light,
       ),
-      home: NewsletterListPage(),
+      home: NewslettersMasterDetailContainer(),
     );
   }
 }

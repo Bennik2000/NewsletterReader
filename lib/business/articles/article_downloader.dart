@@ -16,10 +16,15 @@ class ArticleDownloader {
   final Article _article;
   final Newsletter _newsletter;
 
+  bool _isDownloading;
+  bool get isDownloading => _isDownloading;
+
   ArticleDownloader(this._article, this._newsletter, this._fileDownloadRepository, this._fileDownloader, this._articleRepository,
       this._articleThumbnailCreatorFactory);
 
   Future downloadArticle() async {
+    _isDownloading = true;
+
     var directory = path.join(
       "newsletter_" + _newsletter.id.toString(),
       _article.id.toString(),
@@ -49,6 +54,8 @@ class ArticleDownloader {
 
       _article.isDownloaded = false;
     }
+
+    _isDownloading = false;
   }
 
   String getFilename() {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 class UpdateArticlesButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewsletterState>(
-      builder: (BuildContext context, NewsletterState value, Widget child) => IconButton(
+    return Consumer(
+      builder: (BuildContext context, NewsletterViewModel value, Widget child) => IconButton(
         icon: Icon(
           Icons.refresh,
           color: Theme.of(context).accentColor,
