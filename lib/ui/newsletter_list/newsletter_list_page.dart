@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
-import 'package:newsletter_reader/ui/settings/settings_page.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -55,15 +54,20 @@ class NewsletterListPage extends StatelessWidget {
             FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
+
+            var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
+
             await Navigator.of(context).push(
               new MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return new NewsletterEditPage(new Newsletter());
+                  return new NewsletterEditPage(viewModel);
                 },
               ),
             );
 
-            state.loadNewsletters();
+            viewModel.dispose();
+
+            await state.loadNewsletters();
           },
         ),
       ),

@@ -18,20 +18,23 @@ class NewsletterArticleUpdater {
   Future<List<Article>> updateArticles() async {
     _isUpdating = true;
 
-    var articleSearcher = _getArticleSearcher();
 
-    List<Article> newArticles = await articleSearcher.fetchNewArticles();
+    try {
+      var articleSearcher = _getArticleSearcher();
 
-    for (Article article in newArticles) {
-      await _articleRepository.saveArticleForNewsletter(_newsletter.id, article);
+      List<Article> newArticles = await articleSearcher.fetchNewArticles();
+
+      for (Article article in newArticles) {
+        await _articleRepository.saveArticleForNewsletter(_newsletter.id, article);
+      }
+
+      _newsletter.lastUpdated = DateTime.now();
+      await _newsletterRepository.saveNewsletter(_newsletter);
+
+      return newArticles;
+    } finally {
+      _isUpdating = false;
     }
-
-    _newsletter.lastUpdated = DateTime.now();
-    await _newsletterRepository.saveNewsletter(_newsletter);
-
-    _isUpdating = false;
-
-    return newArticles;
   }
 
   ArticleSearcher _getArticleSearcher() {

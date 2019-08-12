@@ -124,4 +124,11 @@ class NewsletterViewModel with ChangeNotifier {
 
     _articles = null;
   }
+
+  @override
+  void dispose() {
+    _disposeArticleViewModels();
+
+    super.dispose();
+  }
 }

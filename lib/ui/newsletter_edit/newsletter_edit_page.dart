@@ -1,45 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/model/model.dart';
-import 'package:newsletter_reader/ui/newsletter_edit/state/newsletter_edit_state.dart';
+import 'package:newsletter_reader/ui/newsletter_edit/state/newsletter_edit_view_model.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
-import 'newsletter_edit.dart';
+import 'newsletter_edit_content.dart';
 
-class NewsletterEditPage extends StatefulWidget {
-  final Newsletter newsletter;
+class NewsletterEditPage extends StatelessWidget {
+  final NewsletterViewModel newsletter;
 
   NewsletterEditPage(this.newsletter);
 
   @override
-  State<StatefulWidget> createState() => _NewsletterEditPageState(newsletter);
-}
-
-class _NewsletterEditPageState extends State<NewsletterEditPage> {
-  final Newsletter _newsletter;
-
-  _NewsletterEditPageState(this._newsletter);
-
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (c) => new NewsletterEditState(_newsletter, kiwi.Container().resolve()),
+      builder: (c) => new NewsletterEditViewModel(newsletter, kiwi.Container().resolve()),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
           title: Text("Newsletter bearbeiten"),
           actions: <Widget>[
             Consumer(
-              builder: (BuildContext context, NewsletterEditState value, Widget child) => IconButton(
+              builder: (BuildContext context, NewsletterEditViewModel value, Widget child) => IconButton(
                 icon: Icon(Icons.check),
                 onPressed: () => okButtonClick(context, value),
-              ),
-            ),
-            Consumer(
-              builder: (BuildContext context, NewsletterEditState value, Widget child) => IconButton(
-                icon: Icon(Icons.delete_outline),
-                onPressed: () => deleteButtonClick(context, value),
               ),
             ),
           ],
@@ -67,7 +53,7 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: NewsletterEdit(newsletter: _newsletter,),
+                child: NewsletterEditContent(newsletter: newsletter,),
               ),
             ],
           ),
@@ -80,29 +66,12 @@ class _NewsletterEditPageState extends State<NewsletterEditPage> {
   }
 
 
-  Future okButtonClick(BuildContext context, NewsletterEditState state) async {
+  Future okButtonClick(BuildContext context, NewsletterEditViewModel state) async {
     state.validate();
 
     if (!state.hasError) {
       await state.save();
       Navigator.of(context).pop();
     }
-  }
-
-  Future deleteButtonClick(BuildContext context, NewsletterEditState state) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => createAlertDialog(
-        context,
-        "${state.newsletter.name} löschen",
-        "Der Newsletter ${state.newsletter.name} wird endgültig gelöscht.",
-        okAction: () async {
-          await state.delete();
-          Navigator.of(context).pop();
-        },
-        cancelAction: () {},
-        okText: "Löschen",
-      ),
-    );
   }
 }

@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:newsletter_reader/business/articles/article_delete.dart';
 import 'package:newsletter_reader/business/articles/article_download_delete.dart';
 import 'package:newsletter_reader/business/articles/article_downloader.dart';
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
+import 'package:newsletter_reader/business/newsletters/newsletter_delete.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 
 import 'newsletter_view_model.dart';
 
-class NewsletterListViewModel {
+class NewsletterListViewModel with ChangeNotifier{
   final NewsletterRepository _newsletterRepository;
   final ArticleRepository _articleRepository;
   final NewsletterArticleUpdaterFactory _articleUpdaterFactory;
@@ -16,6 +18,9 @@ class NewsletterListViewModel {
   final ArticleDownloadDeleteFactory _articleDownloadDeleteFactory;
 
   List<NewsletterViewModel> _newsletters;
+  List<NewsletterViewModel> get newsletters => _newsletters;
+
+  bool isLoading = false;
 
   NewsletterListViewModel(
     this._newsletterRepository,
@@ -26,15 +31,13 @@ class NewsletterListViewModel {
     this._articleDownloadDeleteFactory,
   );
 
-  Future<List<NewsletterViewModel>> getNewsletters() async {
-    if (_newsletters == null) {
-      await loadNewsletters();
-    }
-
-    return _newsletters;
-  }
-
   Future loadNewsletters() async {
+    if(isLoading) return;
+
+    isLoading = true;
+
+    notifyListeners();
+
     _disposeNewsletterViewModels();
 
     var loadedNewsletters = await _newsletterRepository.queryNewsletters();
@@ -55,17 +58,34 @@ class NewsletterListViewModel {
       viewModels.add(viewModel);
     }
 
-
     _newsletters = viewModels;
+    isLoading = false;
+
+    notifyListeners();
   }
 
   void _disposeNewsletterViewModels() {
-    if (_newsletters == null) return;
+    if (newsletters == null) return;
 
-    for (var newsletter in _newsletters) {
+    for (var newsletter in newsletters) {
       newsletter.dispose();
     }
 
     _newsletters = null;
+  }
+
+  Future deleteNewsletter(NewsletterViewModel newsletter) async {
+    await new NewsletterDelete(newsletter.newsletter, _newsletterRepository, _articleRepository).deleteNewsletter();
+
+    newsletters.remove(newsletter);
+
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _disposeNewsletterViewModels();
+
+    super.dispose();
   }
 }
