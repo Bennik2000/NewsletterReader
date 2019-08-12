@@ -60,6 +60,7 @@ flutter:
     - assets/flare/article_placeholder_1.flr
     - assets/flare/article_placeholder_2.flr
     - assets/flare/steaming_tea.flr
+    - assets/flare/empty_state.flr
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

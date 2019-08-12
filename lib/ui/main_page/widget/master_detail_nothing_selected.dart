@@ -1,4 +1,5 @@
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class MasterDetailNothingSelected extends StatelessWidget {
@@ -7,7 +8,17 @@ class MasterDetailNothingSelected extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Text(""),
+        child: SizedBox(
+          width: 250,
+          height: 250,
+          child: FlareActor(
+            "assets/flare/empty_state.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            color: Theme.of(context).dividerColor,
+            //controller: LoopController(),
+          ),
+        ),
       ),
     );
   }

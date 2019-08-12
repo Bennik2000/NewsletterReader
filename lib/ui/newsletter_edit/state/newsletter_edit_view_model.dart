@@ -60,7 +60,7 @@ class NewsletterEditViewModel with ChangeNotifier {
   }
 
   void validate() {
-    nameError = name?.isEmpty ?? true ? "Der name darf nicht leer sein!" : null;
+    nameError = name?.isEmpty ?? true ? "Der Name darf nicht leer sein!" : null;
     updateStrategyError = updateStrategy == null ? "Es muss eine update Strategie ausgewählt sein!" : null;
     urlError = url?.isEmpty ?? true == null ? "Es muss eine Url angegeben sein!" : null;
 
@@ -68,6 +68,8 @@ class NewsletterEditViewModel with ChangeNotifier {
     if (autoUpdateEnabled ?? false) {
       updateIntervalError = updateInterval == null ? "Es muss ein update Interval ausgewählt sein!" : null;
     }
+
+    notifyListeners();
   }
 
   Future save() async {

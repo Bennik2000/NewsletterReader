@@ -70,7 +70,7 @@ class ArticleCard extends StatelessWidget {
           await readArticle(context, state);
         },
         onLongPress: () async {
-          await articleLongPress(state, newsletter, context);
+          await articleLongPress(state, context);
         },
         child: Stack(
           children: <Widget>[
@@ -103,7 +103,7 @@ class ArticleCard extends StatelessWidget {
     );
   }
 
-  Future articleLongPress(ArticleViewModel article, NewsletterViewModel newsletter, BuildContext context) async {
+  Future articleLongPress(ArticleViewModel article, BuildContext context) async {
     await showModalBottomSheet(
       builder: (BuildContext context) {
         var buttons = <Widget>[];
@@ -111,7 +111,7 @@ class ArticleCard extends StatelessWidget {
         if (article.article.isDownloaded ?? false) {
           buttons.add(new ListTile(
             leading: new Icon(Icons.import_contacts),
-            title: new Text('Beitrag Lesen'),
+            title: new Text('Beitrag lesen'),
             onTap: () async {
               await readArticle(context, article);
               Navigator.of(context).pop();
@@ -147,7 +147,7 @@ class ArticleCard extends StatelessWidget {
           ),
           onTap: () async {
             Navigator.of(context).pop();
-            newsletter.deleteArticle(article);
+            await newsletter.deleteArticle(article);
           },
         ));
 

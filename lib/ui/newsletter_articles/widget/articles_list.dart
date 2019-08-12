@@ -21,7 +21,9 @@ class ArticlesList extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: ListenableProvider.value(
                 value: state.articles[i],
-                child: new ArticleCard(),
+                child: new ArticleCard(
+                  newsletter: state,
+                ),
               ),
             );
           }),
