@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_detail_page.dart';
 import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_page.dart';
 import 'package:newsletter_reader/ui/settings/settings_page.dart';
+import 'package:newsletter_reader/ui/utils/device_utils.dart' as device_utils;
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
-
-import 'package:kiwi/kiwi.dart' as kiwi;
 
 import 'view_model/master_detail_view_model.dart';
 import 'widget/master_detail_nothing_selected.dart';
@@ -34,11 +34,8 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
             return newsletterListViewModel;
           },
           child: Consumer(
-            builder: (BuildContext context, MasterDetailViewModel value,
-                    Widget child) =>
-                isTablet(context)
-                    ? buildTabletLayout(context, value)
-                    : buildPhoneLayout(context),
+            builder: (BuildContext context, MasterDetailViewModel value, Widget child) =>
+                device_utils.isTablet(context) ? buildTabletLayout(context, value) : buildPhoneLayout(context),
           ),
         ),
       ),
@@ -60,13 +57,11 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
     );
   }
 
-  Widget buildTabletLayout(
-      BuildContext context, MasterDetailViewModel masterDetailViewModel) {
+  Widget buildTabletLayout(BuildContext context, MasterDetailViewModel masterDetailViewModel) {
     Widget content;
 
     if (masterDetailViewModel.selectedElement is NewsletterViewModel) {
-      var newsletter =
-          masterDetailViewModel.selectedElement as NewsletterViewModel;
+      var newsletter = masterDetailViewModel.selectedElement as NewsletterViewModel;
       content = NewsletterDetailPage(
         newsletter: newsletter,
         key: ObjectKey(masterDetailViewModel.selectedElement),
@@ -109,13 +104,7 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
     );
   }
 
-  bool isTablet(BuildContext context) {
-    var size = MediaQuery.of(context).size.shortestSide;
-    return size > 600;
-  }
-
-  Future editNewsletter(
-      BuildContext context, NewsletterViewModel newsletter) async {
+  Future editNewsletter(BuildContext context, NewsletterViewModel newsletter) async {
     await Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (BuildContext context) {
@@ -127,8 +116,7 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
     );
   }
 
-  Future navigateToNewsletter(
-      BuildContext context, NewsletterViewModel newsletter) async {
+  Future navigateToNewsletter(BuildContext context, NewsletterViewModel newsletter) async {
     await Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (BuildContext context) {
