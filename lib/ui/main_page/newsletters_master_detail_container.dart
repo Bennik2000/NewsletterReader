@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit.dart';
@@ -43,6 +44,8 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
   }
 
   Widget buildPhoneLayout(BuildContext context) {
+    applyPreferredDeviceOrientations(false);
+
     return NewsletterListPage(
       showAsCards: true,
       onNewsletterTap: (NewsletterViewModel newsletter) async {
@@ -58,6 +61,8 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
   }
 
   Widget buildTabletLayout(BuildContext context, MasterDetailViewModel masterDetailViewModel) {
+    applyPreferredDeviceOrientations(true);
+
     Widget content;
 
     if (masterDetailViewModel.selectedElement is NewsletterViewModel) {
@@ -136,6 +141,19 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void applyPreferredDeviceOrientations(bool isTablet) {
+    var deviceOrientations = [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ];
+
+    if (isTablet) {
+      deviceOrientations.addAll([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    }
+
+    SystemChrome.setPreferredOrientations(deviceOrientations);
   }
 }
 
