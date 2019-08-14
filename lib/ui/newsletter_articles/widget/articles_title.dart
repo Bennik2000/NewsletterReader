@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
-import 'package:provider/provider.dart';
 
 class ArticlesTitle extends StatelessWidget {
   final NewsletterViewModel newsletter;
 
   const ArticlesTitle({Key key, this.newsletter}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {

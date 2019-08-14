@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'file_repository.dart';
-
-class FilePublicRepository extends FileRepository {
-  @override
+class FilePublicRepository {
   Future<File> getFile(String directory, String filename) async {
     var path = join(directory, filename);
 

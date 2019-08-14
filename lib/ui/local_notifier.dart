@@ -44,7 +44,9 @@ class LocalNotifier extends Notifier {
     _flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
   }
 
+  // ignore: missing_return
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) {}
 
+  // ignore: missing_return
   Future onSelectNotification(String payload) {}
 }

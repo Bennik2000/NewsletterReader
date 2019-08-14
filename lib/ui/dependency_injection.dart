@@ -7,7 +7,6 @@ import 'package:newsletter_reader/business/newsletters/newsletter_article_update
 import 'package:newsletter_reader/business/notification/notifier.dart';
 import 'package:newsletter_reader/business/pdf/pdf_to_image_renderer.dart';
 import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
-import 'package:newsletter_reader/data/filestorage/file_download_repository.dart';
 import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
@@ -23,15 +22,14 @@ void inject() {
       ..registerInstance(new DatabaseAccess())
       ..registerFactory((c) => NewsletterRepository(c.resolve()))
       ..registerFactory((c) => ArticleRepository(c.resolve()))
-      ..registerFactory((c) => FileDownloadRepository())
       ..registerFactory((c) => FilePublicRepository())
       ..registerFactory((c) => FileDownloader())
       ..registerFactory((c) => SettingsRepository())
       ..registerFactory((c) => NewsletterArticleUpdaterFactory(c.resolve(), c.resolve()))
-      ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve(), c.resolve()))
+      ..registerFactory((c) => ArticleDownloaderFactory(c.resolve(), c.resolve(), c.resolve()))
       ..registerFactory((c) => ArticleDownloadDeleteFactory(c.resolve()))
       ..registerFactory((c) => ArticleDeleteFactory(c.resolve(), c.resolve()))
-      ..registerFactory((c) => ArticleThumbnailCreatorFactory(c.resolve(), c.resolve(), c.resolve()))
+      ..registerFactory((c) => ArticleThumbnailCreatorFactory(c.resolve(), c.resolve()))
       ..registerFactory<PdfToImageRenderer, NativePdfToImageRenderer>((c) => NativePdfToImageRenderer())
       ..registerFactory<Notifier, LocalNotifier>((c) => LocalNotifier());
   } catch (e) {}
