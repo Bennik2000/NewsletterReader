@@ -13,19 +13,34 @@ class NewsletterStoragePath {
     return path;
   }
 
-  Future<File> getNewsletterFile(Newsletter newsletter) async {
+  Future<String> getPathToArticleDirectory(Newsletter newsletter, Article article) async {
     var directory = await getPathToNewsletterDirectory(newsletter);
+    return join(directory, article.id.toString());
+  }
+
+  Future<File> getArticleStorageFile(Newsletter newsletter, Article article) async {
+    var directory = await getPathToArticleDirectory(newsletter, article);
 
     var filename = newsletter.name ?? newsletter.id.toString();
 
-    return File.fromUri(Uri.file(join(directory, filename)));
+    var file = File.fromUri(Uri.file(join(directory, filename)));
+
+    await createFileIfNeeded(file);
+
+    return file;
   }
 
-  Future<File> getThumbnailFile(Newsletter newsletter) async {
-    var directory = await getPathToNewsletterDirectory(newsletter);
+  Future<File> getThumbnailFile(Newsletter newsletter, Article article) async {
+    var directory = await getPathToArticleDirectory(newsletter, article);
 
     var filename = "thumbnail.png";
 
     return File.fromUri(Uri.file(join(directory, filename)));
+  }
+
+  Future createFileIfNeeded(File file) async {
+    if (!(await file.exists())) {
+      await file.create(recursive: true);
+    }
   }
 }

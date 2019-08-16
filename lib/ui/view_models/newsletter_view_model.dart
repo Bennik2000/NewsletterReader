@@ -41,20 +41,14 @@ class NewsletterViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      var loadedArticles =
-          await _articleRepository.queryArticlesOfNewsletter(newsletter.id);
-      loadedArticles
-          .sort((a, b) => -a.releaseDate?.compareTo(b.releaseDate) ?? 0);
+      var loadedArticles = await _articleRepository.queryArticlesOfNewsletter(newsletter.id);
+      loadedArticles.sort((a, b) => -a.releaseDate?.compareTo(b.releaseDate) ?? 0);
 
       var viewModels = <ArticleViewModel>[];
 
       for (var article in loadedArticles) {
-        viewModels.add(ArticleViewModel(
-            article,
-            _articleDownloaderFactory.getNewArticleDownloaderInstance(
-                newsletter, article),
-            _articleDownloadDeleteFactory
-                .getNewArticleDownloadDeleteInstance(article)));
+        viewModels.add(ArticleViewModel(article, _articleDownloaderFactory.getNewArticleDownloaderInstance(newsletter, article),
+            _articleDownloadDeleteFactory.getNewArticleDownloadDeleteInstance(article)));
       }
 
       _disposeArticleViewModels();
@@ -83,16 +77,11 @@ class NewsletterViewModel with ChangeNotifier {
       var newArticles = await newArticlesFuture;
 
       for (var article in newArticles) {
-        articles.add(ArticleViewModel(
-            article,
-            _articleDownloaderFactory.getNewArticleDownloaderInstance(
-                newsletter, article),
-            _articleDownloadDeleteFactory
-                .getNewArticleDownloadDeleteInstance(article)));
+        articles.add(ArticleViewModel(article, _articleDownloaderFactory.getNewArticleDownloaderInstance(newsletter, article),
+            _articleDownloadDeleteFactory.getNewArticleDownloadDeleteInstance(article)));
       }
 
-      articles.sort((a, b) =>
-          -a.article.releaseDate?.compareTo(b.article.releaseDate) ?? 0);
+      articles.sort((a, b) => -a.article.releaseDate?.compareTo(b.article.releaseDate) ?? 0);
     } catch (e) {
       print(e);
       error = e.toString();
@@ -104,9 +93,7 @@ class NewsletterViewModel with ChangeNotifier {
   Future deleteArticle(ArticleViewModel article) async {
     articles.remove(article);
 
-    await _articleDeleteFactory
-        .getNewArticleDeleteInstance(article.article)
-        .deleteArticle();
+    await _articleDeleteFactory.getNewArticleDeleteInstance(article.article).deleteArticle();
 
     notifyListeners();
   }
@@ -118,11 +105,17 @@ class NewsletterViewModel with ChangeNotifier {
   void _disposeArticleViewModels() {
     if (_articles == null) return;
 
-    for (var viewModel in _articles) {
+    var articles = _articles;
+
+    _articles = null;
+
+    notifyListeners();
+
+    for (var viewModel in articles) {
       viewModel.dispose();
     }
 
-    _articles = null;
+    articles = null;
   }
 
   @override

@@ -23,7 +23,7 @@ class ArticleDownloader {
   Future downloadArticle() async {
     _isDownloading = true;
 
-    var file = await new NewsletterStoragePath().getNewsletterFile(_newsletter);
+    var file = await new NewsletterStoragePath().getArticleStorageFile(_newsletter, _article);
 
     try {
       await _fileDownloader.downloadFile(_article.sourceUrl, file);

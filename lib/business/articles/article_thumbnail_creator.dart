@@ -12,7 +12,7 @@ class ArticleThumbnailCreator {
   ArticleThumbnailCreator(this._pdfToImageRenderer, this._articleRepository, this._article, this._newsletter);
 
   Future createThumbnail() async {
-    var thumbnailFile = await new NewsletterStoragePath().getThumbnailFile(_newsletter);
+    var thumbnailFile = await new NewsletterStoragePath().getThumbnailFile(_newsletter, _article);
 
     await _pdfToImageRenderer.renderPdfToImage(_article.storagePath, thumbnailFile.path, 0);
 

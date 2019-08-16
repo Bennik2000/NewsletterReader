@@ -1,4 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/articles/article_import.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_title.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +19,30 @@ class NewsletterArticlesPage extends StatelessWidget {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0,
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Import".toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).primaryTextTheme.button.color,
+              ),
+            ),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            onPressed: () async {
+              var path = await FilePicker.getFilePath(fileExtension: "pdf");
+
+              if (path != null) {
+                await new ArticleImport(
+                  kiwi.Container().resolve(),
+                  kiwi.Container().resolve(),
+                  newsletter.newsletter,
+                ).importArticle(path);
+              }
+
+              await newsletter.loadArticles();
+            },
+          )
+        ],
       ),
       body: ListenableProvider(
         builder: (c) => newsletter,
