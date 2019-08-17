@@ -1,5 +1,6 @@
-import 'dart:io';
+import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:newsletter_reader/data/repository/newsletter_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
 
@@ -8,16 +9,45 @@ class NewsletterImport {
 
   NewsletterImport(this._newsletterRepository);
 
-  Future importNewsletter(String path) async {
-    var file = new File(path);
+  Future<bool> importNewsletter() async {
+    var data = (await Clipboard.getData(Clipboard.kTextPlain)).text;
 
-    var json = await file.readAsString();
+    var newsletterData = getNewsletterData(data);
 
-    var newsletter = NewsletterJsonHelper.fromJson(json);
+    if (newsletterData == null) return false;
 
-    newsletter.id = null;
-    newsletter.lastUpdated = null;
+    try {
+      var newsletter = NewsletterJsonHelper.fromJson(newsletterData);
 
-    await _newsletterRepository.saveNewsletter(newsletter);
+      newsletter.id = null;
+      newsletter.lastUpdated = null;
+
+      await _newsletterRepository.saveNewsletter(newsletter);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  String getNewsletterData(String data) {
+    if (data == null) return null;
+
+    var header = "===========Newsletter===========";
+    var footer = "================================";
+
+    var indexStart = data.indexOf(new RegExp(header));
+    var indexEnd = data.indexOf(new RegExp(footer), indexStart > 0 ? indexStart : 0);
+
+    if (indexStart < 0 || indexEnd < header.length) {
+      return null;
+    }
+
+    try {
+      var encodedData = data.substring(indexStart + header.length + 1, indexEnd - 1);
+      return utf8.decode(base64.decode(encodedData));
+    } catch (e) {
+      return null;
+    }
   }
 }

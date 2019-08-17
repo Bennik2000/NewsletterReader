@@ -8,7 +8,8 @@ class NewslettersEmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text("Hier gibt es leider noch keine Newsletter zu sehen. Füge einen neuen Newsletter mit + hinzu"),
+          Text(
+              "Hier gibt es leider noch keine Newsletter zu sehen. Füge einen neuen Newsletter mit + hinzu oder importiere einen Newsletter über die Einstellungen"),
         ],
       ),
     );

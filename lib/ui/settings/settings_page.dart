@@ -1,12 +1,16 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 import 'state/settings_state.dart';
+import 'widget/import_newsletter_button.dart';
 
 class SettingsPage extends StatelessWidget {
+  final NewsletterListViewModel newsletterListViewModel;
+
+  const SettingsPage({Key key, this.newsletterListViewModel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -14,20 +18,8 @@ class SettingsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Settings'),
           actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "Import".toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryTextTheme.button.color,
-                ),
-              ),
-              shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-              onPressed: () async {
-                var path = await FilePicker.getFilePath();
-                if (path != null) {
-                  await new NewsletterImport(kiwi.Container().resolve()).importNewsletter(path);
-                }
-              },
+            ImportNewsletterButton(
+              newsletterListViewModel: newsletterListViewModel,
             ),
           ],
         ),

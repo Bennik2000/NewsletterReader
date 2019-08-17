@@ -1,21 +1,27 @@
-import 'dart:io';
+import 'dart:convert';
 
-import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
+import 'package:flutter/services.dart';
 import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterExport {
   final Newsletter _newsletter;
-  final FilePublicRepository _filePublicRepository;
 
-  NewsletterExport(this._newsletter, this._filePublicRepository);
+  NewsletterExport(this._newsletter);
 
-  Future shareNewsletter() async {
-    var file = await _filePublicRepository.getFile("Newsletters", (_newsletter.name ?? _newsletter.id.toString()) + ".json");
+  Future<bool> exportNewsletter() async {
+    var header = "===========Newsletter===========";
+    var footer = "================================";
 
-    file.create(recursive: true);
+    try {
+      var json = NewsletterJsonHelper.toJson(_newsletter);
 
-    var json = NewsletterJsonHelper.toJson(_newsletter);
+      var output = "$header\n${base64.encode(utf8.encode(json))}\n$footer";
 
-    await file.writeAsString(json, mode: FileMode.write);
+      await Clipboard.setData(ClipboardData(text: output));
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

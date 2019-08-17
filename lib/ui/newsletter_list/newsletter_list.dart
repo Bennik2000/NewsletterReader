@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/business/newsletters/newsletter_export.dart';
 import 'package:newsletter_reader/ui/main_page/main_page.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
@@ -29,14 +28,12 @@ class NewsletterList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, NewsletterListViewModel listViewModel,
-          Widget child) {
+      builder: (BuildContext context, NewsletterListViewModel listViewModel, Widget child) {
         if (listViewModel.isLoading) {
           return NewsletterLoadingIndicator();
         }
 
-        List<NewsletterViewModel> newsletters =
-            listViewModel.newsletters ?? <NewsletterViewModel>[];
+        List<NewsletterViewModel> newsletters = listViewModel.newsletters ?? <NewsletterViewModel>[];
 
         if (newsletters.isEmpty) {
           return NewslettersEmptyState();
@@ -49,36 +46,35 @@ class NewsletterList extends StatelessWidget {
 
   Widget buildNewsletterList(NewsletterListViewModel listViewModel) {
     return Consumer(
-      builder: (BuildContext context, MasterDetailViewModel masterDetailViewModel, Widget child) =>
-          ListView.separated(
-            itemBuilder: (BuildContext context, int index) {
-              return NewsletterCardWidget(
-                showAsCard: showAsCards,
-                isSelected: listViewModel.newsletters[index] == selectedItem,
-                newsletter: listViewModel.newsletters[index],
-                onTap: onNewsletterTap,
-                onLongPress: (NewsletterViewModel newsletter) async {
-                  await onNewsletterLongPress(
-                    context,
-                    masterDetailViewModel,
-                    newsletter,
-                    listViewModel,
-                  );
-                },
+      builder: (BuildContext context, MasterDetailViewModel masterDetailViewModel, Widget child) => ListView.separated(
+        itemBuilder: (BuildContext context, int index) {
+          return NewsletterCardWidget(
+            showAsCard: showAsCards,
+            isSelected: listViewModel.newsletters[index] == selectedItem,
+            newsletter: listViewModel.newsletters[index],
+            onTap: onNewsletterTap,
+            onLongPress: (NewsletterViewModel newsletter) async {
+              await onNewsletterLongPress(
+                context,
+                masterDetailViewModel,
+                newsletter,
+                listViewModel,
               );
             },
-            itemCount: listViewModel.newsletters.length,
-            separatorBuilder: (BuildContext context, int index) {
-              if (!showAsCards) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                  child: Divider(height: 1, color: Theme.of(context).dividerColor),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
+          );
+        },
+        itemCount: listViewModel.newsletters.length,
+        separatorBuilder: (BuildContext context, int index) {
+          if (!showAsCards) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              child: Divider(height: 1, color: Theme.of(context).dividerColor),
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 
@@ -125,12 +121,12 @@ class NewsletterList extends StatelessWidget {
               onTap: () async {
                 Navigator.of(context).pop();
 
-                showDialog(
+                await showDialog(
                   context: context,
                   builder: (BuildContext context) => createAlertDialog(
                     context,
                     "${newsletter.newsletter.name} löschen",
-                    "Der Newsletter ${newsletter.newsletter.name} wird endgültig gelöscht.",
+                    message: "Der Newsletter ${newsletter.newsletter.name} wird endgültig gelöscht.",
                     okAction: () async {
                       await listViewModel.deleteNewsletter(newsletter);
 
@@ -148,21 +144,31 @@ class NewsletterList extends StatelessWidget {
     );
   }
 
-  Future onExportNewsletterClick(
-      NewsletterViewModel newsletter, BuildContext context) async {
-    await new NewsletterExport(
-            newsletter.newsletter, kiwi.Container().resolve())
-        .shareNewsletter();
+  Future onExportNewsletterClick(NewsletterViewModel newsletter, BuildContext context) async {
+    var result = await new NewsletterExport(newsletter.newsletter).exportNewsletter();
 
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) => createAlertDialog(
-        context,
-        "Newsletter exportiert",
-        "Der Newsletter wurde exportiert",
-        okAction: () => {},
-        cancelAction: null,
-      ),
-    );
+    if (result) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => createAlertDialog(
+          context,
+          "Newsletter exportiert",
+          message: "Der Newsletter wurde in die Zwischenablage kopiert. Du kannst ihn nun per Textnachricht teilen",
+          okAction: () => {},
+          cancelAction: null,
+        ),
+      );
+    } else {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => createAlertDialog(
+          context,
+          "Newsletter nicht exportiert",
+          message: "Der Newsletter konnte nicht exportiert werden",
+          okAction: () => {},
+          cancelAction: null,
+        ),
+      );
+    }
   }
 }

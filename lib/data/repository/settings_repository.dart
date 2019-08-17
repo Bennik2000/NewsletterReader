@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsRepository {
-  Future<bool> getNotifyOnNewArticles() async => await getBool("NotifyOnNewArticles");
+  Future<bool> getNotifyOnNewArticles() async => await getBool("NotifyOnNewArticles", fallback: true);
 
   Future setNotifyOnNewArticles(bool value) async {
     await setBool("NotifyOnNewArticles", value);
@@ -31,8 +31,10 @@ class SettingsRepository {
     await setBool("NotifyOnUpdateError", value);
   }
 
-  Future<bool> getBool(String key) async {
-    return (await _getPreferences()).getBool(key) ?? false;
+  Future<bool> getBool(String key, {bool fallback}) async {
+    fallback = fallback ?? false;
+
+    return (await _getPreferences()).getBool(key) ?? fallback;
   }
 
   Future setBool(String key, bool value) async {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 Widget createAlertDialog(
   BuildContext context,
-  String title,
-  String message, {
+  String title, {
+  String message,
   Function okAction,
   Function cancelAction,
   String okText: "OK",
@@ -30,9 +30,14 @@ Widget createAlertDialog(
     ));
   }
 
+  if ((message == null) && title != null) {
+    message = title;
+    title = null;
+  }
+
   return AlertDialog(
-    title: new Text(title),
-    content: new Text(message),
+    title: title != null ? new Text(title) : null,
+    content: message != null ? new Text(message) : null,
     actions: buttons,
   );
 }

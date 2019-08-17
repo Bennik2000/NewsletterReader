@@ -23,6 +23,8 @@ class NewsletterStoragePath {
 
     var filename = newsletter.name ?? newsletter.id.toString();
 
+    filename += ".pdf";
+
     var file = File.fromUri(Uri.file(join(directory, filename)));
 
     await createFileIfNeeded(file);

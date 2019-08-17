@@ -72,7 +72,11 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
         key: ObjectKey(masterDetailViewModel.selectedElement),
       );
     } else if (masterDetailViewModel.selectedElement is SettingElement) {
-      content = SettingsPage();
+      content = Consumer(
+        builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => SettingsPage(
+          newsletterListViewModel: viewModel,
+        ),
+      );
     } else {
       content = MasterDetailNothingSelected();
     }
@@ -137,7 +141,11 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
     await Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (BuildContext context) {
-          return new SettingsPage();
+          return Consumer(
+            builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => SettingsPage(
+              newsletterListViewModel: viewModel,
+            ),
+          );
         },
       ),
     );
