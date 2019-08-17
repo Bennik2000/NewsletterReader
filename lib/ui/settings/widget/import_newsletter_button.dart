@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 
@@ -13,7 +14,7 @@ class ImportNewsletterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       child: Text(
-        "Import".toUpperCase(),
+        L.of(context).importNewsletterButton.toUpperCase(),
         style: TextStyle(
           color: Theme.of(context).primaryTextTheme.button.color,
         ),
@@ -33,7 +34,7 @@ class ImportNewsletterButton extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => createAlertDialog(
           context,
-          "Newsletter importiert",
+          L.of(context).importNewsletterDialogTitle,
           okAction: () {},
           cancelAction: null,
         ),
@@ -43,9 +44,8 @@ class ImportNewsletterButton extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => createAlertDialog(
           context,
-          "Newsletter nicht importiert",
-          message:
-              "Der Newsletter konnte nicht importiert werden. Kopiere zuerst eine Newsletter Nachricht in die Zwischenablage und wiederhole es erneut",
+          L.of(context).importNewsletterFailedDialogTitle,
+          message: L.of(context).importNewsletterFailedDialogMessage,
           okAction: () {},
           cancelAction: null,
         ),

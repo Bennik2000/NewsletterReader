@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +13,6 @@ class NewsletterArticlesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -28,7 +27,7 @@ class NewsletterArticlesContent extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Verfügbare Ausgaben",
+                    L.of(context).newsletterAvailableArticles,
                     style: Theme.of(context).textTheme.headline,
                   ),
                 ),
@@ -47,9 +46,7 @@ class NewsletterArticlesContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: Consumer(
-            builder: (BuildContext context, NewsletterViewModel value,
-                    Widget child) =>
-                Opacity(
+            builder: (BuildContext context, NewsletterViewModel value, Widget child) => Opacity(
               opacity: value.error != null ? 1 : 0,
               child: Text(
                 value.error ?? "",
@@ -63,9 +60,7 @@ class NewsletterArticlesContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: Consumer(
-            builder:
-                (BuildContext context, NewsletterViewModel value, Widget child) =>
-                    Opacity(
+            builder: (BuildContext context, NewsletterViewModel value, Widget child) => Opacity(
               opacity: (value.isUpdating) ? 1 : 0,
               child: LinearProgressIndicator(),
             ),

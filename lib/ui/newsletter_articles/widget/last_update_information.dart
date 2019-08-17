@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
+import 'package:newsletter_reader/util/util.dart';
 import 'package:provider/provider.dart';
 
 class LastUpdatedInformation extends StatelessWidget {
@@ -11,9 +13,9 @@ class LastUpdatedInformation extends StatelessWidget {
         String text;
 
         if (value.newsletter?.lastUpdated != null) {
-          text = getPrettyLastUpdatedString(value.newsletter?.lastUpdated);
+          text = getPrettyLastUpdatedString(context, value.newsletter?.lastUpdated);
         } else {
-          text = "Noch nie aktualisiert";
+          text = L.of(context).newsletterNeverUpdated;
         }
 
         return Text(
@@ -24,18 +26,18 @@ class LastUpdatedInformation extends StatelessWidget {
     );
   }
 
-  String getPrettyLastUpdatedString(DateTime date) {
+  String getPrettyLastUpdatedString(BuildContext context, DateTime date) {
     DateTime now = DateTime.now();
 
-    String dateString = DateFormat.yMd().format(date);
-    String timeString = DateFormat.Hm().format(date);
+    String dateString = DateFormat.yMd(L.of(context).locale.languageCode).format(date);
+    String timeString = DateFormat.Hm(L.of(context).locale.languageCode).format(date);
 
     if (date.day == now.day && date.month == now.month && date.year == now.year) {
-      return "Zulezt aktualisiert heute um $timeString Uhr";
+      return stringFormat(L.of(context).newsletterUpdatedTodayAt, [timeString]);
     } else if (date.day == now.day - 1 && date.month == now.month && date.year == now.year) {
-      return "Zulezt aktualisiert gestern um $timeString Uhr";
+      return stringFormat(L.of(context).newsletterUpdatedYesterdayAt, [timeString]);
     }
 
-    return "Zuletzt aktualisiert am $dateString um $timeString";
+    return stringFormat(L.of(context).newsletterUpdatedAt, [dateString, timeString]);
   }
 }

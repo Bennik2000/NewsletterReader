@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -88,7 +89,7 @@ class ArticleCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
                       child: Text(
-                        DateFormat.yMMMEd().format(state.article.releaseDate),
+                        DateFormat.yMMMEd(L.of(context).locale.languageCode).format(state.article.releaseDate),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -111,7 +112,7 @@ class ArticleCard extends StatelessWidget {
         if (article.article.isDownloaded ?? false) {
           buttons.add(new ListTile(
             leading: new Icon(Icons.import_contacts),
-            title: new Text('Beitrag lesen'),
+            title: new Text(L.of(context).articleMenuRead),
             onTap: () async {
               await readArticle(context, article);
               Navigator.of(context).pop();
@@ -120,7 +121,7 @@ class ArticleCard extends StatelessWidget {
 
           buttons.add(new ListTile(
             leading: new Icon(Icons.file_download),
-            title: new Text('Download entfernen'),
+            title: new Text(L.of(context).articleMenuDeleteDownload),
             onTap: () async {
               await article.deleteDownloadedArticle();
               Navigator.of(context).pop();
@@ -129,7 +130,7 @@ class ArticleCard extends StatelessWidget {
         } else {
           buttons.add(new ListTile(
             leading: new Icon(Icons.file_download),
-            title: new Text('Herunterladen'),
+            title: new Text(L.of(context).articleMenuDownload),
             onTap: () async {
               Navigator.of(context).pop();
               await article.downloadArticle();
@@ -142,7 +143,7 @@ class ArticleCard extends StatelessWidget {
         buttons.add(new ListTile(
           leading: new Icon(Icons.delete_forever, color: Theme.of(context).errorColor),
           title: new Text(
-            'Beitrag löschen',
+            L.of(context).articleMenuDelete,
             style: TextStyle(color: Theme.of(context).errorColor),
           ),
           onTap: () async {
@@ -174,7 +175,7 @@ class ArticleCard extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                   child: new CircularProgressIndicator(),
                 ),
-                new Text("Opening..."),
+                new Text(L.of(context).articleFileOpening),
               ],
             ),
           ),

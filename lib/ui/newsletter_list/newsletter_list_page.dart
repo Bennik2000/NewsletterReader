@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/model/model.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
@@ -29,12 +30,10 @@ class NewsletterListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Newsletters"),
+        title: Text(L.of(context).newslettersListPageTitle),
         actions: <Widget>[
           Consumer(
-            builder: (BuildContext context, NewsletterListViewModel viewModel,
-                    Widget child) =>
-                IconButton(
+            builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => IconButton(
               icon: Icon(Icons.settings),
               onPressed: () async {
                 onSettingsClicked();
@@ -50,11 +49,9 @@ class NewsletterListPage extends StatelessWidget {
         showAsCards: showAsCards,
       ),
       floatingActionButton: Consumer(
-        builder: (BuildContext context, NewsletterListViewModel state, _) =>
-            FloatingActionButton(
+        builder: (BuildContext context, NewsletterListViewModel state, _) => FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
-
             var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
 
             await Navigator.of(context).push(

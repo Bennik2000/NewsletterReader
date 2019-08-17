@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/business/newsletters/newsletter_export.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/main_page/main_page.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
@@ -92,7 +93,7 @@ class NewsletterList extends StatelessWidget {
           children: <Widget>[
             new ListTile(
               leading: new Icon(Icons.edit),
-              title: new Text('Bearbeiten'),
+              title: new Text(L.of(context).newsletterMenuEdit),
               onTap: () async {
                 Navigator.of(context).pop();
                 onNewsletterEdit(newsletter);
@@ -100,7 +101,7 @@ class NewsletterList extends StatelessWidget {
             ),
             new ListTile(
               leading: new Icon(Icons.share),
-              title: new Text('Exportieren'),
+              title: new Text(L.of(context).newsletterMenuExport),
               onTap: () async {
                 Navigator.of(context).pop();
                 await onExportNewsletterClick(newsletter, context);
@@ -113,7 +114,7 @@ class NewsletterList extends StatelessWidget {
                 color: Theme.of(context).errorColor,
               ),
               title: new Text(
-                'Newsletter löschen',
+                L.of(context).newsletterMenuDelete,
                 style: TextStyle(
                   color: Theme.of(context).errorColor,
                 ),
@@ -133,7 +134,7 @@ class NewsletterList extends StatelessWidget {
                       masterDetailViewModel.selectedElement = null;
                     },
                     cancelAction: () {},
-                    okText: "Löschen",
+                    okText: L.of(context).buttonDelete,
                   ),
                 );
               },
@@ -152,8 +153,8 @@ class NewsletterList extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => createAlertDialog(
           context,
-          "Newsletter exportiert",
-          message: "Der Newsletter wurde in die Zwischenablage kopiert. Du kannst ihn nun per Textnachricht teilen",
+          L.of(context).exportNewsletterDialogTitle,
+          message: L.of(context).exportNewsletterDialogMessage,
           okAction: () => {},
           cancelAction: null,
         ),
@@ -163,8 +164,8 @@ class NewsletterList extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => createAlertDialog(
           context,
-          "Newsletter nicht exportiert",
-          message: "Der Newsletter konnte nicht exportiert werden",
+          L.of(context).exportNewsletterFailedDialogTitle,
+          message: L.of(context).exportNewsletterFailedDialogMessage,
           okAction: () => {},
           cancelAction: null,
         ),

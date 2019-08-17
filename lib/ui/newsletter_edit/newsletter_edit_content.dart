@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/model/model.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -15,10 +16,8 @@ class NewsletterEditContent extends StatefulWidget {
 }
 
 class _NewsletterEditContentState extends State<NewsletterEditContent> {
-  final TextEditingController _nameTextEditingController =
-      new TextEditingController();
-  final TextEditingController _urlTextEditingController =
-      new TextEditingController();
+  final TextEditingController _nameTextEditingController = new TextEditingController();
+  final TextEditingController _urlTextEditingController = new TextEditingController();
 
   final NewsletterViewModel _newsletter;
 
@@ -36,10 +35,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Consumer(
-              builder: (BuildContext context, NewsletterEditViewModel state, _) =>
-                  TextField(
+              builder: (BuildContext context, NewsletterEditViewModel state, _) => TextField(
                 decoration: InputDecoration(
-                  hintText: "Name",
+                  hintText: L.of(context).editNewsletterNameHint,
                   errorText: state?.nameError,
                   alignLabelWithHint: true,
                 ),
@@ -55,8 +53,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
             ),
             Padding(
               child: Consumer(
-                builder: (BuildContext context, NewsletterEditViewModel state, _) =>
-                    InputDecorator(
+                builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
                   child: DropdownButton(
                     isExpanded: true,
                     items: getUpdateStrategyMenuItems(),
@@ -68,9 +65,8 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                     isDense: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: "Update Strategie",
-                    helperText:
-                        "Gibt an, wie nach neuen Ausgaben gesucht werden soll",
+                    labelText: L.of(context).editNewsletterUpdateStrategyLabel,
+                    helperText: L.of(context).editNewsletterUpdateStrategyHelper,
                     errorText: state.updateStrategyError,
                   ),
                 ),
@@ -85,9 +81,8 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                 return TextField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.insert_link),
-                    labelText: "Url",
-                    helperText:
-                        "Die Url, wo nach neuen Ausgaben gesucht werden soll",
+                    labelText: L.of(context).editNewsletterUrlLabel,
+                    helperText: L.of(context).editNewsletterUrlHelper,
                     errorText: state.urlError,
                     alignLabelWithHint: true,
                   ),
@@ -110,9 +105,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
               child: Row(
                 children: <Widget>[
                   Consumer(
-                    builder:
-                        (BuildContext context, NewsletterEditViewModel state, _) =>
-                            Checkbox(
+                    builder: (BuildContext context, NewsletterEditViewModel state, _) => Checkbox(
                       onChanged: (isChecked) {
                         state.autoUpdateEnabled = isChecked;
                       },
@@ -121,7 +114,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                   ),
                   Expanded(
                     child: Text(
-                      "Automatisch nach neuen Beiträgen suchen",
+                      L.of(context).editNewsletterAutoUpdateArticles,
                       overflow: TextOverflow.clip,
                     ),
                   ),
@@ -129,8 +122,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
               ),
             ),
             Consumer(
-              builder: (BuildContext context, NewsletterEditViewModel state, _) =>
-                  AnimatedSwitcher(
+              builder: (BuildContext context, NewsletterEditViewModel state, _) => AnimatedSwitcher(
                 child: state.autoUpdateEnabled ?? false
                     ? Column(
                         children: <Widget>[
@@ -139,19 +131,16 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                             child: Row(
                               children: <Widget>[
                                 Consumer(
-                                  builder: (BuildContext context,
-                                          NewsletterEditViewModel state, _) =>
-                                      Checkbox(
+                                  builder: (BuildContext context, NewsletterEditViewModel state, _) => Checkbox(
                                     onChanged: (isChecked) {
                                       state.autoDownloadEnabled = isChecked;
                                     },
-                                    value: state.autoDownloadEnabled ??
-                                        false,
+                                    value: state.autoDownloadEnabled ?? false,
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "Neue Beiträge automatisch herunterladen",
+                                    L.of(context).editNewsletterAutoDownloadArticles,
                                     overflow: TextOverflow.clip,
                                   ),
                                 ),
@@ -159,9 +148,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                             ),
                           ),
                           Consumer(
-                            builder: (BuildContext context,
-                                    NewsletterEditViewModel state, _) =>
-                                InputDecorator(
+                            builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
                               child: DropdownButton(
                                 isExpanded: true,
                                 items: getUpdateIntervalMenuItems(),
@@ -174,9 +161,8 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                               ),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.watch_later),
-                                labelText: "Update Interval",
-                                helperText:
-                                    "Das Interval, mit dem neue Ausgaben gesucht werden",
+                                labelText: L.of(context).editNewsletterUpdateIntervalLabel,
+                                helperText: L.of(context).editNewsletterUpdateIntervalHelper,
                                 errorText: state.updateIntervalError,
                               ),
                             ),
@@ -198,15 +184,13 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
 
   List<DropdownMenuItem<UpdateInterval>> getUpdateIntervalMenuItems() {
     return UpdateInterval.values
-        .map((code) => new DropdownMenuItem(
-            value: code, child: new Text(code.toString().split('.').last)))
+        .map((code) => new DropdownMenuItem(value: code, child: new Text(code.toString().split('.').last)))
         .toList();
   }
 
   List<DropdownMenuItem> getUpdateStrategyMenuItems() {
     return UpdateStrategy.values
-        .map((code) => new DropdownMenuItem(
-            value: code, child: new Text(code.toString().split('.').last)))
+        .map((code) => new DropdownMenuItem(value: code, child: new Text(code.toString().split('.').last)))
         .toList();
   }
 }

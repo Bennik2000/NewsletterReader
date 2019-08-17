@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 
 Widget createAlertDialog(
   BuildContext context,
@@ -6,9 +7,16 @@ Widget createAlertDialog(
   String message,
   Function okAction,
   Function cancelAction,
-  String okText: "OK",
-  String cancelText: "Cancel",
+  String okText: "",
+  String cancelText: "",
 }) {
+  if (okText == "") {
+    okText = L.of(context).buttonOk;
+  }
+  if (cancelText == "") {
+    cancelText = L.of(context).buttonCancel;
+  }
+
   var buttons = <Widget>[];
 
   if (okAction != null) {

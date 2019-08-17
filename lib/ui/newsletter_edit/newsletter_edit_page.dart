@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/model/model.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/state/newsletter_edit_view_model.dart';
-import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,7 @@ class NewsletterEditPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text("Newsletter bearbeiten"),
+          title: Text(L.of(context).editNewsletterPageTitle),
           actions: <Widget>[
             Consumer(
               builder: (BuildContext context, NewsletterEditViewModel value, Widget child) => IconButton(
@@ -31,40 +30,41 @@ class NewsletterEditPage extends StatelessWidget {
           ],
         ),
         body: Stack(
-      children: <Widget>[
-      SizedBox(
-        height: 150,
-        child: Container(
-          color: Theme.of(context).primaryColor,
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
-        child: Card(
-          margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-          ),
-          elevation: 16,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: NewsletterEditContent(newsletter: newsletter,),
+          children: <Widget>[
+            SizedBox(
+              height: 150,
+              child: Container(
+                color: Theme.of(context).primaryColor,
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
+              child: Card(
+                margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
+                ),
+                elevation: 16,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: NewsletterEditContent(
+                        newsletter: newsletter,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      ],
-    ),
       ),
     );
   }
-
 
   Future okButtonClick(BuildContext context, NewsletterEditViewModel state) async {
     state.validate();

@@ -1,1 +1,2 @@
-export 'package:newsletter_reader/util/general_exceptions.dart';
+export 'general_exceptions.dart';
+export 'string_format.dart';

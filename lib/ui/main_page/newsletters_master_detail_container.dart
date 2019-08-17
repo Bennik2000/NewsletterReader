@@ -35,15 +35,19 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
             return newsletterListViewModel;
           },
           child: Consumer(
-            builder: (BuildContext context, MasterDetailViewModel value, Widget child) =>
-                device_utils.isTablet(context) ? buildTabletLayout(context, value) : buildPhoneLayout(context),
+            builder: (BuildContext context, MasterDetailViewModel value, Widget child) => Consumer(
+              builder: (BuildContext context, NewsletterListViewModel newsletterListViewModel, Widget child) =>
+                  device_utils.isTablet(context)
+                      ? buildTabletLayout(context, value)
+                      : buildPhoneLayout(context, newsletterListViewModel),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget buildPhoneLayout(BuildContext context) {
+  Widget buildPhoneLayout(BuildContext context, NewsletterListViewModel newsletterListViewModel) {
     applyPreferredDeviceOrientations(false);
 
     return NewsletterListPage(
@@ -55,7 +59,7 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
         await editNewsletter(context, newsletter);
       },
       onSettingsClicked: () async {
-        await navigateToSettings(context);
+        await navigateToSettings(context, newsletterListViewModel);
       },
     );
   }
@@ -137,16 +141,12 @@ class NewslettersMasterDetailContainer extends StatelessWidget {
     );
   }
 
-  Future navigateToSettings(BuildContext context) async {
+  Future navigateToSettings(BuildContext context, NewsletterListViewModel newsletterListViewModel) async {
     await Navigator.of(context).push(
       new MaterialPageRoute(
-        builder: (BuildContext context) {
-          return Consumer(
-            builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => SettingsPage(
-              newsletterListViewModel: viewModel,
-            ),
-          );
-        },
+        builder: (BuildContext context) => SettingsPage(
+          newsletterListViewModel: newsletterListViewModel,
+        ),
       ),
     );
   }
