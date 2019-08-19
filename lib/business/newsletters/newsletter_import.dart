@@ -10,14 +10,9 @@ class NewsletterImport {
   NewsletterImport(this._newsletterRepository);
 
   Future<bool> importNewsletter() async {
-    var data = (await Clipboard.getData(Clipboard.kTextPlain)).text;
-
-    var newsletterData = getNewsletterData(data);
-
-    if (newsletterData == null) return false;
 
     try {
-      var newsletter = NewsletterJsonHelper.fromJson(newsletterData);
+      var newsletter = await _readNewsletterFromClipboard();
 
       newsletter.id = null;
       newsletter.lastUpdated = null;
@@ -49,5 +44,24 @@ class NewsletterImport {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<Newsletter> _readNewsletterFromClipboard() async {
+    var data = (await Clipboard.getData(Clipboard.kTextPlain)).text;
+
+    var newsletterData = getNewsletterData(data);
+
+    if (newsletterData == null) return null;
+
+    try{
+      return NewsletterJsonHelper.fromJson(newsletterData);
+    }
+    catch(e){
+      return null;
+    }
+  }
+
+  Future<bool> getCanImportNewsletter() async {
+    return (await _readNewsletterFromClipboard()) != null;
   }
 }

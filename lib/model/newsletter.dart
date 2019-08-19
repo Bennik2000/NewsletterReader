@@ -51,6 +51,8 @@ class NewsletterJsonHelper {
       "deleteDownloadedBehavior": newsletter.deleteDownloadedBehavior?.index,
       "maxDiskSpaceUntilDelete": newsletter.maxDiskSpaceUntilDelete,
       "durationUntilDelete": newsletter.durationUntilDelete?.inMilliseconds,
+      "isAutoUpdateEnabled": newsletter.isAutoUpdateEnabled ?? false,
+      "isAutoDownloadEnabled": newsletter.isAutoDownloadEnabled ?? false,
     };
 
     return jsonEncode(map);
@@ -60,16 +62,30 @@ class NewsletterJsonHelper {
     var map = jsonDecode(json);
 
     return new Newsletter(
-        id: map["id"],
-        name: map["name"],
-        url: map["url"],
-        maxDiskSpaceUntilDelete: map["maxDiskSpaceUntilDelete"],
-        updateStrategy: map["updateStrategy"] != null ? UpdateStrategy.values[map["updateStrategy"]] : null,
-        updateInterval: map["updateInterval"] != null ? UpdateInterval.values[map["updateInterval"]] : null,
-        deleteDownloadedBehavior:
-            map["deleteDownloadedBehavior"] != null ? DeleteDownloadedBehavior.values[map["deleteDownloadedBehavior"]] : null,
-        updateTime: map["updateTime"] != null ? DateTime.fromMillisecondsSinceEpoch(map["updateTime"]) : null,
-        lastUpdated: map["lastUpdated"] != null ? DateTime.fromMillisecondsSinceEpoch(map["lastUpdated"]) : null,
-        durationUntilDelete: map["durationUntilDelete"] != null ? Duration(milliseconds: map["durationUntilDelete"]) : null);
+      id: map["id"],
+      name: map["name"],
+      url: map["url"],
+      maxDiskSpaceUntilDelete: map["maxDiskSpaceUntilDelete"],
+      updateStrategy: map["updateStrategy"] != null
+          ? UpdateStrategy.values[map["updateStrategy"]]
+          : null,
+      updateInterval: map["updateInterval"] != null
+          ? UpdateInterval.values[map["updateInterval"]]
+          : null,
+      deleteDownloadedBehavior: map["deleteDownloadedBehavior"] != null
+          ? DeleteDownloadedBehavior.values[map["deleteDownloadedBehavior"]]
+          : null,
+      updateTime: map["updateTime"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map["updateTime"])
+          : null,
+      lastUpdated: map["lastUpdated"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map["lastUpdated"])
+          : null,
+      durationUntilDelete: map["durationUntilDelete"] != null
+          ? Duration(milliseconds: map["durationUntilDelete"])
+          : null,
+      isAutoDownloadEnabled: map["isAutoDownloadEnabled"],
+      isAutoUpdateEnabled: map["isAutoUpdateEnabled"],
+    );
   }
 }
