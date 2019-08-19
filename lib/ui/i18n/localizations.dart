@@ -68,6 +68,8 @@ class L {
   static Map<String, Map<String, String>> _localizedValues = {"de": de, "en": en};
 
   _getValue(String key) => _localizedValues[locale.languageCode][key] ?? "";
+
+  String getValue(String key) => _getValue(key);
 }
 
 class LocalizationDelegate extends LocalizationsDelegate<L> {

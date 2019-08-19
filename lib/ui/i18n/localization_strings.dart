@@ -46,6 +46,12 @@ const String CouldImportNewsletterDialogTitle = "CouldImportNewsletterDialogTitl
 const String CouldImportNewsletterDialogMessage = "CouldImportNewsletterDialogMessage";
 const String CouldImportNewsletterDialogButtonNewNewsletter = "CouldImportNewsletterDialogButtonNewNewsletter";
 const String CouldImportNewsletterDialogButtonImportNewsletter = "CouldImportNewsletterDialogButtonImportNewsletter";
+const String UpdateStrategySameUrl = "UpdateStrategy.SameUrl";
+const String UpdateStrategyPatternUrl = "UpdateStrategy.PatternUrl";
+const String UpdateIntervalHourly = "UpdateInterval.Hourly";
+const String UpdateIntervalDaily = "UpdateInterval.Daily";
+const String UpdateIntervalWeekly = "UpdateInterval.Weekly";
+const String UpdateIntervalMonthly = "UpdateInterval.Monthly";
 
 final de = {
   NewsletterAvailableArticles: "Verfügbare Ausgaben",
@@ -75,7 +81,7 @@ final de = {
       "Der Newsletter konnte nicht importiert werden. Kopiere zuerst eine Newsletter Nachricht in die Zwischenablage und wiederhole es erneut",
   ImportNewsletterFailedDialogTitle: "Newsletter nicht importiert",
   ImportNewsletterDialogTitle: "Newsletter importiert",
-  NewslettersListPageTitle: "Newsletters",
+  NewslettersListPageTitle: "Newsletter",
   NoNewslettersEmptyState:
       "Hier gibt es leider noch keine Newsletter zu sehen. Füge einen neuen Newsletter mit + hinzu oder importiere einen Newsletter über die Einstellungen",
   SettingsNotificationOnNewArticlesDownloaded: "Benachrichtigung, wenn neue Ausgaben heruntergeladen wurden",
@@ -99,6 +105,12 @@ final de = {
       "Es befindet sich ein Newsletter in der Zwischenablage. Möchten sie diesen einfügen anstatt einen neuen zu erstellen?",
   CouldImportNewsletterDialogButtonNewNewsletter: "Neu erstellen",
   CouldImportNewsletterDialogButtonImportNewsletter: "Einfügen",
+  UpdateStrategySameUrl: "Immer die selbe URL verwenden",
+  UpdateStrategyPatternUrl: "URL mit Platzhaltern verwenden",
+  UpdateIntervalHourly: "Stündlich",
+  UpdateIntervalDaily: "Täglich",
+  UpdateIntervalWeekly: "Wöchentlich",
+  UpdateIntervalMonthly: "Monatlich",
 };
 
 final en = {
@@ -152,4 +164,10 @@ final en = {
       "A newsletter was found in the current clipboard. Do you want to import it instead of creating a new one?",
   CouldImportNewsletterDialogButtonNewNewsletter: "Create new",
   CouldImportNewsletterDialogButtonImportNewsletter: "Import",
+  UpdateStrategySameUrl: "Always use the same URL",
+  UpdateStrategyPatternUrl: "Use an URL with placeholders",
+  UpdateIntervalHourly: "Hourly",
+  UpdateIntervalDaily: "Daily",
+  UpdateIntervalWeekly: "Weekly",
+  UpdateIntervalMonthly: "Monthly",
 };

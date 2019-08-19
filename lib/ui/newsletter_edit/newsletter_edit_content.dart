@@ -56,7 +56,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                 builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
                   child: DropdownButton(
                     isExpanded: true,
-                    items: getUpdateStrategyMenuItems(),
+                    items: getUpdateStrategyMenuItems(context),
                     onChanged: (value) {
                       state.updateStrategy = value;
                     },
@@ -151,7 +151,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                             builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
                               child: DropdownButton(
                                 isExpanded: true,
-                                items: getUpdateIntervalMenuItems(),
+                                items: getUpdateIntervalMenuItems(context),
                                 onChanged: (value) {
                                   state.updateInterval = value;
                                 },
@@ -182,15 +182,15 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
     );
   }
 
-  List<DropdownMenuItem<UpdateInterval>> getUpdateIntervalMenuItems() {
+  List<DropdownMenuItem<UpdateInterval>> getUpdateIntervalMenuItems(BuildContext context) {
     return UpdateInterval.values
-        .map((code) => new DropdownMenuItem(value: code, child: new Text(code.toString().split('.').last)))
+        .map((code) => new DropdownMenuItem(value: code, child: new Text(L.of(context).getValue(code.toString()))))
         .toList();
   }
 
-  List<DropdownMenuItem> getUpdateStrategyMenuItems() {
+  List<DropdownMenuItem> getUpdateStrategyMenuItems(BuildContext context) {
     return UpdateStrategy.values
-        .map((code) => new DropdownMenuItem(value: code, child: new Text(code.toString().split('.').last)))
+        .map((code) => new DropdownMenuItem(value: code, child: new Text(L.of(context).getValue(code.toString()))))
         .toList();
   }
 }
