@@ -42,12 +42,16 @@ const String NewsletterMenuExport = "NewsletterMenuExport";
 const String NewsletterUpdatedTodayAt = "NewsletterUpdatedTodayAt";
 const String NewsletterUpdatedYesterdayAt = "NewsletterUpdatedYesterdayAt";
 const String NewsletterUpdatedAt = "NewsletterUpdatedAt";
+const String CouldImportNewsletterDialogTitle = "CouldImportNewsletterDialogTitle";
+const String CouldImportNewsletterDialogMessage = "CouldImportNewsletterDialogMessage";
+const String CouldImportNewsletterDialogButtonNewNewsletter = "CouldImportNewsletterDialogButtonNewNewsletter";
+const String CouldImportNewsletterDialogButtonImportNewsletter = "CouldImportNewsletterDialogButtonImportNewsletter";
 
 final de = {
   NewsletterAvailableArticles: "Verfügbare Ausgaben",
   ArticleFileOpening: "Öffnen...",
   NewsletterNeverUpdated: "Noch nie aktualisiert",
-  ImportArticleButton: "Importieren",
+  ImportArticleButton: "Beitrag importieren",
   NoArticlesAvailable: "Es sind noch keine Ausgaben verfügbar",
   EditNewsletterNameHint: "Name",
   ButtonCancel: "Abbrechen",
@@ -66,7 +70,7 @@ final de = {
   ExportNewsletterDialogTitle: "Newsletter exportiert",
   ExportNewsletterFailedDialogTitle: "Newsletter nicht exportiert",
   ExportNewsletterFailedDialogMessage: "Der Newsletter konnte nicht exportiert werden",
-  ImportNewsletterButton: "Importieren",
+  ImportNewsletterButton: "Newsletter importieren",
   ImportNewsletterFailedDialogMessage:
       "Der Newsletter konnte nicht importiert werden. Kopiere zuerst eine Newsletter Nachricht in die Zwischenablage und wiederhole es erneut",
   ImportNewsletterFailedDialogTitle: "Newsletter nicht importiert",
@@ -90,13 +94,18 @@ final de = {
   NewsletterUpdatedTodayAt: "Zulezt aktualisiert heute um {0} Uhr",
   NewsletterUpdatedYesterdayAt: "Zulezt aktualisiert gestern um {0} Uhr",
   NewsletterUpdatedAt: "Zuletzt aktualisiert am {0} um {1}",
+  CouldImportNewsletterDialogTitle: "Newsletter importieren",
+  CouldImportNewsletterDialogMessage:
+      "Es befindet sich ein Newsletter in der Zwischenablage. Möchten sie diesen einfügen anstatt einen neuen zu erstellen?",
+  CouldImportNewsletterDialogButtonNewNewsletter: "Neu erstellen",
+  CouldImportNewsletterDialogButtonImportNewsletter: "Einfügen",
 };
 
 final en = {
   NewsletterAvailableArticles: "Available articles",
   ArticleFileOpening: "Open...",
   NewsletterNeverUpdated: "Never updated",
-  ImportArticleButton: "Import",
+  ImportArticleButton: "Import article",
   NoArticlesAvailable: "No articles are available",
   EditNewsletterNameHint: "Name",
   ButtonCancel: "Cancel",
@@ -115,7 +124,7 @@ final en = {
   ExportNewsletterDialogTitle: "Exported newsletter",
   ExportNewsletterFailedDialogTitle: "Newsletter not exported",
   ExportNewsletterFailedDialogMessage: "The newsletter could not be exported",
-  ImportNewsletterButton: "Import",
+  ImportNewsletterButton: "Import newsletter",
   ImportNewsletterFailedDialogMessage:
       "The newsletter could not be imported. First copy a newsletter into the clipboard, then try it again",
   ImportNewsletterFailedDialogTitle: "Newsletter not imported",
@@ -138,4 +147,9 @@ final en = {
   NewsletterUpdatedTodayAt: "Updated today at {0}",
   NewsletterUpdatedYesterdayAt: "Updated yesterday at {0}",
   NewsletterUpdatedAt: "Updated {0} at {1}",
+  CouldImportNewsletterDialogTitle: "Import newsletter",
+  CouldImportNewsletterDialogMessage:
+      "A newsletter was found in the current clipboard. Do you want to import it instead of creating a new one?",
+  CouldImportNewsletterDialogButtonNewNewsletter: "Create new",
+  CouldImportNewsletterDialogButtonImportNewsletter: "Import",
 };

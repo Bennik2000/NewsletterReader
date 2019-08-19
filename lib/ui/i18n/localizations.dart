@@ -52,6 +52,11 @@ class L {
   String get newsletterUpdatedYesterdayAt => _getValue(NewsletterUpdatedYesterdayAt);
   String get newsletterUpdatedAt => _getValue(NewsletterUpdatedAt);
 
+  String get couldImportNewsletterDialogTitle => _getValue(CouldImportNewsletterDialogTitle);
+  String get couldImportNewsletterDialogMessage => _getValue(CouldImportNewsletterDialogMessage);
+  String get couldImportNewsletterDialogButtonNewNewsletter => _getValue(CouldImportNewsletterDialogButtonNewNewsletter);
+  String get couldImportNewsletterDialogButtonImportNewsletter => _getValue(CouldImportNewsletterDialogButtonImportNewsletter);
+
   final Locale locale;
 
   L(this.locale);

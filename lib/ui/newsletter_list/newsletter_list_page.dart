@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
+import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -52,22 +55,54 @@ class NewsletterListPage extends StatelessWidget {
         builder: (BuildContext context, NewsletterListViewModel state, _) => FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
-            var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
-
-            await Navigator.of(context).push(
-              new MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return new NewsletterEditPage(viewModel);
-                },
-              ),
-            );
-
-            viewModel.dispose();
-
-            await state.loadNewsletters();
+            await onNewNewsletterPressed(context, state);
           },
         ),
       ),
     );
+  }
+
+  Future onNewNewsletterPressed(BuildContext context, NewsletterListViewModel state) async {
+    var newsletterImport = new NewsletterImport(kiwi.Container().resolve());
+
+    bool canImportNewsletter = await newsletterImport.getCanImportNewsletter();
+
+    if (canImportNewsletter) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => createAlertDialog(
+          context,
+          L.of(context).couldImportNewsletterDialogTitle,
+          message: L.of(context).couldImportNewsletterDialogMessage,
+          cancelText: L.of(context).couldImportNewsletterDialogButtonNewNewsletter,
+          okText: L.of(context).couldImportNewsletterDialogButtonImportNewsletter,
+          okAction: () async {
+            await newsletterImport.importNewsletter();
+            await state.loadNewsletters();
+          },
+          cancelAction: () async {
+            await showNewNewsletterPage(context, state);
+          },
+        ),
+      );
+    } else {
+      await showNewNewsletterPage(context, state);
+    }
+  }
+
+  Future showNewNewsletterPage(BuildContext context, NewsletterListViewModel state) async {
+    var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
+
+    await Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (BuildContext context) {
+          return new NewsletterEditPage(viewModel);
+        },
+      ),
+    );
+
+    viewModel.dispose();
+
+    await state.loadNewsletters();
   }
 }

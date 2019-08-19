@@ -17,7 +17,11 @@ class NewsletterArticlesPage extends StatelessWidget {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0,
-        actions: <Widget>[ImportArticleButton()],
+        actions: <Widget>[
+          ImportArticleButton(
+            newsletter: newsletter,
+          )
+        ],
       ),
       body: ListenableProvider(
         builder: (c) => newsletter,
