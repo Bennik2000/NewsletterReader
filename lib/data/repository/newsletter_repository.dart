@@ -1,6 +1,6 @@
 import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
 import 'package:newsletter_reader/data/database/entity/newsletter_entity.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class NewsletterRepository {
   final DatabaseAccess _database;
@@ -27,5 +27,9 @@ class NewsletterRepository {
     } else {
       await _database.update(NewsletterEntity.tableName(), row);
     }
+  }
+
+  Future deleteNewsletter(Newsletter newsletter) async {
+    await _database.delete(NewsletterEntity.tableName(), newsletter.id);
   }
 }

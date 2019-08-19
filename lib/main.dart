@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
+import 'package:newsletter_reader/business/articles/database_article_sanitizer.dart';
+import 'package:newsletter_reader/system/periodic_background_task.dart';
+import 'package:newsletter_reader/ui/app.dart';
 import 'package:newsletter_reader/ui/dependency_injection.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_page.dart';
 
-void main() {
+Future main() async {
   inject();
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Newsletter reader',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: NewsletterListPage(),
-    );
-  }
+  await new DatabaseArticleSanitizer(
+    kiwi.Container().resolve(),
+    kiwi.Container().resolve(),
+  ).sanitize();
+
+  runApp(MyApp());
+  new PeriodicBackgroundTask().registerBackgroundTask();
 }

@@ -1,68 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/data/model/model.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_list.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_page_background.dart';
 import 'package:newsletter_reader/ui/newsletter_articles/widget/articles_title.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/last_update_information.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/no_articles_empty_state.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/widget/update_articles_button.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
-class NewsletterArticlesPage extends StatefulWidget {
-  final Newsletter newsletter;
+import 'newsletter_articles_content.dart';
+import 'widget/articles_page_background.dart';
+import 'widget/import_article_button.dart';
+
+class NewsletterArticlesPage extends StatelessWidget {
+  final NewsletterViewModel newsletter;
 
   const NewsletterArticlesPage({Key key, this.newsletter}) : super(key: key);
-
-  @override
-  _NewsletterArticlesPageState createState() => _NewsletterArticlesPageState(newsletter);
-}
-
-class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
-  final Newsletter _newsletter;
-
-  _NewsletterArticlesPageState(Newsletter newsletter) : _newsletter = newsletter {}
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0,
+        actions: <Widget>[
+          ImportArticleButton(
+            newsletter: newsletter,
+          )
+        ],
       ),
-      body: ChangeNotifierProvider(
-        builder: (c) => new NewsletterState(
-              _newsletter,
-              kiwi.Container().resolve(),
-              kiwi.Container().resolve(),
-            ),
+      body: ListenableProvider(
+        builder: (c) => newsletter,
         child: Stack(
           children: <Widget>[
             ArticlesPageBackground(),
-            buildBody(),
+            buildBody(context),
           ],
         ),
       ),
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     return Flex(
+      direction: Axis.vertical,
       children: <Widget>[
         Flexible(
+          child: ArticlesTitle(
+            newsletter: newsletter,
+          ),
           flex: 1,
-          child: ArticlesTitle(),
         ),
-        Flexible(
-          flex: 7,
-          child: buildContent(),
-        )
+        Expanded(
+          child: buildContent(context),
+          flex: 6,
+        ),
       ],
-      direction: Axis.vertical,
     );
   }
 
-  Widget buildContent() {
+  Widget buildContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Card(
@@ -74,66 +65,7 @@ class _NewsletterArticlesPageState extends State<NewsletterArticlesPage> {
           ),
         ),
         elevation: 16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Verfügbare Ausgaben",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  LastUpdatedInformation(),
-                  UpdateArticlesButton(),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Consumer<NewsletterState>(
-                builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
-                      opacity: value.error != null ? 1 : 0,
-                      child: Text(
-                        value.error ?? "",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Consumer<NewsletterState>(
-                builder: (BuildContext context, NewsletterState value, Widget child) => Opacity(
-                      opacity: (value.isLoading || value.isUpdating) ? 1 : 0,
-                      child: LinearProgressIndicator(),
-                    ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
-              child: Divider(
-                height: 1,
-                color: Colors.black12,
-              ),
-            ),
-            Consumer<NewsletterState>(
-              builder: (BuildContext context, NewsletterState state, _) {
-                if (state.isLoaded && state.loadedArticles.isEmpty) {
-                  return NoArticlesEmptyState();
-                } else if (state.isLoaded && state.loadedArticles.isNotEmpty) {
-                  return ArticlesList(state.loadedArticles, _newsletter);
-                }
-                return Container();
-              },
-            ),
-          ],
-        ),
+        child: NewsletterArticlesContent(),
       ),
     );
   }

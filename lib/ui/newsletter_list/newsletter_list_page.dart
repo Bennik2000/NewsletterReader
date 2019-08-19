@@ -1,80 +1,108 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
-import 'package:newsletter_reader/data/model/model.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/newsletter_articles_page.dart';
+import 'package:newsletter_reader/business/newsletters/newsletter_import.dart';
+import 'package:newsletter_reader/model/model.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/newsletter_edit/newsletter_edit_page.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_bloc.dart';
-import 'package:newsletter_reader/ui/newsletter_list/newsletter_list_event.dart';
+import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
+import 'package:provider/provider.dart';
 
-class NewsletterListPage extends StatefulWidget {
-  @override
-  _NewsletterListPageState createState() => _NewsletterListPageState();
-}
+import 'newsletter_list.dart';
+import 'widgets/newsletter_card.dart';
 
-class _NewsletterListPageState extends State<NewsletterListPage> {
-  final NewsletterListBloc _newsletterListBloc = new NewsletterListBloc(kiwi.Container().resolve());
+typedef SettingsClicked = void Function();
 
-  _NewsletterListPageState() {
-    _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-  }
+class NewsletterListPage extends StatelessWidget {
+  final NewsletterTapCallback onNewsletterTap;
+  final NewsletterEditCallback onNewsletterEdit;
+  final SettingsClicked onSettingsClicked;
+  final NewsletterViewModel selectedItem;
+  final bool showAsCards;
+
+  const NewsletterListPage({
+    Key key,
+    @required this.onNewsletterTap,
+    @required this.onNewsletterEdit,
+    @required this.onSettingsClicked,
+    this.selectedItem,
+    this.showAsCards,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Newsletters"),
-      ),
-      body: BlocProvider(
-        bloc: _newsletterListBloc,
-        child: Center(
-          child: NewsletterList(
-            onNewsletterTap: (Newsletter newsletter) {
-              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                return new NewsletterArticlesPage(
-                  newsletter: newsletter,
-                );
-              })).then((value) {
-                _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-              });
-            },
-            onLongPress: (Newsletter newsletter) {
-              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                return new NewsletterEditPage(newsletter);
-              })).then((value) {
-                _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-              });
-            },
+        title: Text(L.of(context).newslettersListPageTitle),
+        actions: <Widget>[
+          Consumer(
+            builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () async {
+                onSettingsClicked();
+              },
+            ),
           ),
+        ],
+      ),
+      body: NewsletterList(
+        onNewsletterTap: onNewsletterTap,
+        onNewsletterEdit: onNewsletterEdit,
+        selectedItem: selectedItem,
+        showAsCards: showAsCards,
+      ),
+      floatingActionButton: Consumer(
+        builder: (BuildContext context, NewsletterListViewModel state, _) => FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async {
+            await onNewNewsletterPressed(context, state);
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-            return new NewsletterEditPage(new Newsletter());
-          })).then((value) {
-            _newsletterListBloc.dispatch(new LoadNewsletterListEvent());
-          });
-        },
-        child: Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list),
-          title: Text("Newsletters"),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.file_download),
-          title: Text("Heruntergeladen"),
-        )
-      ]),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _newsletterListBloc.dispose();
+  Future onNewNewsletterPressed(BuildContext context, NewsletterListViewModel state) async {
+    var newsletterImport = new NewsletterImport(kiwi.Container().resolve());
+
+    bool canImportNewsletter = await newsletterImport.getCanImportNewsletter();
+
+    if (canImportNewsletter) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => createAlertDialog(
+          context,
+          L.of(context).couldImportNewsletterDialogTitle,
+          message: L.of(context).couldImportNewsletterDialogMessage,
+          cancelText: L.of(context).couldImportNewsletterDialogButtonNewNewsletter,
+          okText: L.of(context).couldImportNewsletterDialogButtonImportNewsletter,
+          okAction: () async {
+            await newsletterImport.importNewsletter();
+            await state.loadNewsletters();
+          },
+          cancelAction: () async {
+            await showNewNewsletterPage(context, state);
+          },
+        ),
+      );
+    } else {
+      await showNewNewsletterPage(context, state);
+    }
+  }
+
+  Future showNewNewsletterPage(BuildContext context, NewsletterListViewModel state) async {
+    var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
+
+    await Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (BuildContext context) {
+          return new NewsletterEditPage(viewModel);
+        },
+      ),
+    );
+
+    viewModel.dispose();
+
+    await state.loadNewsletters();
   }
 }

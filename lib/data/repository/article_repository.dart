@@ -1,6 +1,6 @@
 import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
 import 'package:newsletter_reader/data/database/entity/article_entity.dart';
-import 'package:newsletter_reader/data/model/model.dart';
+import 'package:newsletter_reader/model/model.dart';
 
 class ArticleRepository {
   final DatabaseAccess _database;
@@ -11,6 +11,21 @@ class ArticleRepository {
     var rows = await _database.queryRows(
       ArticleEntity.tableName(),
       where: "newsletterId=?",
+      whereArgs: [newsletterId],
+    );
+    var articles = new List<Article>();
+
+    for (var row in rows) {
+      articles.add(new ArticleEntity.fromMap(row).asArticle());
+    }
+
+    return articles;
+  }
+
+  Future<List<Article>> queryNotDownloadedArticlesOfNewsletter(int newsletterId) async {
+    var rows = await _database.queryRows(
+      ArticleEntity.tableName(),
+      where: "newsletterId=? AND (isDownloaded=0 OR isDownloaded IS NULL)",
       whereArgs: [newsletterId],
     );
     var articles = new List<Article>();
@@ -48,5 +63,9 @@ class ArticleRepository {
 
   Future saveArticle(Article article) async {
     await saveArticleForNewsletter(article.newsletterId, article);
+  }
+
+  Future deleteArticle(Article article) async {
+    await _database.delete(ArticleEntity.tableName(), article.id);
   }
 }

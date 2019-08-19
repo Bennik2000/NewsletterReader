@@ -1,70 +1,37 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/article_state.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 import 'article_placeholder.dart';
+import 'article_thumbnail.dart';
 
 class ArticleCard extends StatelessWidget {
+  final NewsletterViewModel newsletter;
   final double borderRadius = 16;
+
+  const ArticleCard({Key key, this.newsletter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return new Consumer(
-      builder: (BuildContext context, ArticleState state, _) => buildCard(state),
+    return Consumer(
+      builder: (BuildContext context, ArticleViewModel state, Widget child) => buildCard(context, state),
     );
   }
 
-  Widget buildCard(ArticleState state) {
+  Widget buildCard(BuildContext context, ArticleViewModel state) {
     Widget image;
 
     if (state.article.thumbnailPath != null) {
-      image = Stack(
-        children: <Widget>[
-          Positioned(
-            top: borderRadius,
-            bottom: borderRadius,
-            left: 0,
-            right: 0,
-            child: Container(
-              child: Ink.image(
-                image: FileImage(File.fromUri(Uri.file(state.article.thumbnailPath))),
-                child: Container(),
-              ),
-            ),
-          ),
-          Positioned(
-            top: borderRadius,
-            bottom: borderRadius,
-            left: 0,
-            right: 0,
-            child: Ink(
-              child: Container(),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.white.withOpacity(0.0),
-                    Colors.white,
-                  ],
-                  stops: [0.0, 0.75],
-                ),
-              ),
-            ),
-          )
-        ],
+      image = ArticleThumbnail(
+        borderRadius: borderRadius,
+        thumbnailPath: state.article.thumbnailPath,
       );
     } else {
-      image = Positioned(
+      image = Padding(
         child: ArticlePlaceholder(state.article.id % 3),
-        top: 8,
-        bottom: 24,
-        left: 0,
-        right: 0,
+        padding: EdgeInsets.fromLTRB(0, 8, 0, 24),
       );
     }
 
@@ -81,25 +48,18 @@ class ArticleCard extends StatelessWidget {
           ),
         ),
       );
-    } else if (state.article.isDownloaded ?? false) {
-      button = Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IconButton(
-          icon: Icon(Icons.delete_outline),
-          color: Colors.amber.shade500,
-          onPressed: state.deleteArticle,
-        ),
-      );
-    } else {
+    } else if (!(state.article.isDownloaded ?? false)) {
       button = Padding(
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
           padding: EdgeInsets.all(0),
           icon: Icon(Icons.file_download),
-          color: Colors.amber.shade500,
+          color: Theme.of(context).accentColor,
           onPressed: state.downloadArticle,
         ),
       );
+    } else {
+      button = Container();
     }
 
     return Card(
@@ -107,21 +67,29 @@ class ArticleCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius)),
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
-        onTap: state.articleClicked,
+        onTap: () async {
+          await readArticle(context, state);
+        },
+        onLongPress: () async {
+          await articleLongPress(state, context);
+        },
         child: Stack(
           children: <Widget>[
-            image,
+            AnimatedSwitcher(
+              child: image,
+              duration: Duration(milliseconds: 200),
+            ),
             Align(
               alignment: Alignment.bottomLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
                       child: Text(
-                        DateFormat.yMMMd().format(state.article.releaseDate),
+                        DateFormat.yMMMEd(L.of(context).locale.languageCode).format(state.article.releaseDate),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -134,5 +102,89 @@ class ArticleCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future articleLongPress(ArticleViewModel article, BuildContext context) async {
+    await showModalBottomSheet(
+      builder: (BuildContext context) {
+        var buttons = <Widget>[];
+
+        if (article.article.isDownloaded ?? false) {
+          buttons.add(new ListTile(
+            leading: new Icon(Icons.import_contacts),
+            title: new Text(L.of(context).articleMenuRead),
+            onTap: () async {
+              await readArticle(context, article);
+              Navigator.of(context).pop();
+            },
+          ));
+
+          buttons.add(new ListTile(
+            leading: new Icon(Icons.file_download),
+            title: new Text(L.of(context).articleMenuDeleteDownload),
+            onTap: () async {
+              await article.deleteDownloadedArticle();
+              Navigator.of(context).pop();
+            },
+          ));
+        } else {
+          buttons.add(new ListTile(
+            leading: new Icon(Icons.file_download),
+            title: new Text(L.of(context).articleMenuDownload),
+            onTap: () async {
+              Navigator.of(context).pop();
+              await article.downloadArticle();
+            },
+          ));
+        }
+        buttons.add(Divider(
+          color: Theme.of(context).dividerColor,
+        ));
+        buttons.add(new ListTile(
+          leading: new Icon(Icons.delete_forever, color: Theme.of(context).errorColor),
+          title: new Text(
+            L.of(context).articleMenuDelete,
+            style: TextStyle(color: Theme.of(context).errorColor),
+          ),
+          onTap: () async {
+            Navigator.of(context).pop();
+            await newsletter.deleteArticle(article);
+          },
+        ));
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: buttons,
+        );
+      },
+      context: context,
+    );
+  }
+
+  Future readArticle(BuildContext context, ArticleViewModel state) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                  child: new CircularProgressIndicator(),
+                ),
+                new Text(L.of(context).articleFileOpening),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    await state.articleClicked();
+
+    Navigator.of(context).pop();
   }
 }

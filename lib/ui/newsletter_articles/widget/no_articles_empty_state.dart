@@ -1,5 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:newsletter_reader/ui/i18n/localizations.dart';
 
 class NoArticlesEmptyState extends StatelessWidget {
   @override
@@ -23,7 +24,7 @@ class NoArticlesEmptyState extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 32, 0, 0),
             child: Center(
-              child: Text("Es sind noch keine Ausgaben verfügbar"),
+              child: Text(L.of(context).noArticlesAvailable),
             ),
           ),
         ],

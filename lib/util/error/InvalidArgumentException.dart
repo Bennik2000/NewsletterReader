@@ -1,1 +1,0 @@
-class InvalidArgumentException implements Exception {}

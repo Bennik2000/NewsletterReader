@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:newsletter_reader/ui/newsletter_articles/state/newsletter_state.dart';
-import 'package:provider/provider.dart';
+import 'package:newsletter_reader/ui/view_models/view_models.dart';
 
 class ArticlesTitle extends StatelessWidget {
+  final NewsletterViewModel newsletter;
+
+  const ArticlesTitle({Key key, this.newsletter}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,17 +20,18 @@ class ArticlesTitle extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                 child: Icon(
                   Icons.import_contacts,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryTextTheme.title.color,
                 ),
               ),
               Flexible(
                 fit: FlexFit.loose,
-                child: Consumer<NewsletterState>(
-                  builder: (BuildContext context, NewsletterState state, _) => Text(
-                        state.newsletter.name,
-                        style: TextStyle(fontSize: 35, color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                child: Text(
+                  newsletter.newsletter.name,
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Theme.of(context).primaryTextTheme.title.color,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
