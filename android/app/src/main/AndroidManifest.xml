@@ -15,7 +15,7 @@
     <application
         tools:replace="android:label"
         android:name=".Application"
-        android:label="newsletter_reader"
+        android:label="Newsletter Reader"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -33,6 +33,7 @@
                 android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
