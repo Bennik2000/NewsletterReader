@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
@@ -12,7 +14,7 @@ class ImportArticleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return !Platform.isIOS ? FlatButton(
       child: Text(
         L.of(context).importArticleButton.toUpperCase(),
         style: TextStyle(
@@ -33,6 +35,6 @@ class ImportArticleButton extends StatelessWidget {
 
         await newsletter.loadArticles();
       },
-    );
+    ) : Container();
   }
 }
