@@ -7,30 +7,44 @@ const String EditNewsletterNameHint = "EditNewsletterNameHint";
 const String ButtonCancel = "ButtonCancel";
 const String ButtonOk = "ButtonOk";
 const String ButtonDelete = "ButtonDelete";
-const String EditNewsletterAutoDownloadArticles = "EditNewsletterAutoDownloadArticles";
-const String EditNewsletterAutoUpdateArticles = "EditNewsletterAutoUpdateArticles";
+const String EditNewsletterAutoDownloadArticles =
+    "EditNewsletterAutoDownloadArticles";
+const String EditNewsletterAutoUpdateArticles =
+    "EditNewsletterAutoUpdateArticles";
 const String EditNewsletterPageTitle = "EditNewsletterPageTitle";
-const String EditNewsletterUpdateIntervalHelper = "EditNewsletterUpdateIntervalHelper";
-const String EditNewsletterUpdateIntervalLabel = "EditNewsletterUpdateIntervalLabel";
-const String EditNewsletterUpdateStrategyHelper = "EditNewsletterUpdateStrategyHelper";
-const String EditNewsletterUpdateStrategyLabel = "EditNewsletterUpdateStrategyLabel";
+const String EditNewsletterUpdateIntervalHelper =
+    "EditNewsletterUpdateIntervalHelper";
+const String EditNewsletterUpdateIntervalLabel =
+    "EditNewsletterUpdateIntervalLabel";
+const String EditNewsletterUpdateStrategyHelper =
+    "EditNewsletterUpdateStrategyHelper";
+const String EditNewsletterUpdateStrategyLabel =
+    "EditNewsletterUpdateStrategyLabel";
 const String EditNewsletterUrlLabel = "EditNewsletterUrlLabel";
 const String EditNewsletterUrlHelper = "EditNewsletterUrlHelper";
 const String ExportNewsletterDialogMessage = "ExportNewsletterDialogMessage";
 const String ExportNewsletterDialogTitle = "ExportNewsletterDialogTitle";
-const String ExportNewsletterFailedDialogTitle = "ExportNewsletterFailedDialogTitle";
-const String ExportNewsletterFailedDialogMessage = "ExportNewsletterFailedDialogMessage";
+const String ExportNewsletterFailedDialogTitle =
+    "ExportNewsletterFailedDialogTitle";
+const String ExportNewsletterFailedDialogMessage =
+    "ExportNewsletterFailedDialogMessage";
 const String ImportNewsletterButton = "ImportNewsletterButton";
-const String ImportNewsletterFailedDialogMessage = "ImportNewsletterFailedDialogMessage";
-const String ImportNewsletterFailedDialogTitle = "ImportNewsletterFailedDialogTitle";
+const String ImportNewsletterFailedDialogMessage =
+    "ImportNewsletterFailedDialogMessage";
+const String ImportNewsletterFailedDialogTitle =
+    "ImportNewsletterFailedDialogTitle";
 const String ImportNewsletterDialogTitle = "ImportNewsletterDialogTitle";
 const String NewslettersListPageTitle = "NewslettersListPageTitle";
 const String NoNewslettersEmptyState = "NoNewslettersEmptyState";
-const String SettingsNotificationOnNewArticlesDownloaded = "SettingsNotificationOnNewArticlesDownloaded";
+const String SettingsNotificationOnNewArticlesDownloaded =
+    "SettingsNotificationOnNewArticlesDownloaded";
 const String SettingsNotificationOnNoWifi = "SettingsNotificationOnNoWifi";
-const String SettingsNotificationOnNoNewArticles = "SettingsNotificationOnNoNewArticles";
-const String SettingsNotificationOnUpdateError = "SettingsNotificationOnUpdateError";
-const String SettingsNotificationOnNewArticles = "SettingsNotificationOnNewArticles";
+const String SettingsNotificationOnNoNewArticles =
+    "SettingsNotificationOnNoNewArticles";
+const String SettingsNotificationOnUpdateError =
+    "SettingsNotificationOnUpdateError";
+const String SettingsNotificationOnNewArticles =
+    "SettingsNotificationOnNewArticles";
 const String SettingsPageTitle = "SettingsPageTitle";
 const String ArticleMenuDelete = "ArticleMenuDelete";
 const String ArticleMenuDeleteDownload = "ArticleMenuDeleteDownload";
@@ -42,10 +56,14 @@ const String NewsletterMenuExport = "NewsletterMenuExport";
 const String NewsletterUpdatedTodayAt = "NewsletterUpdatedTodayAt";
 const String NewsletterUpdatedYesterdayAt = "NewsletterUpdatedYesterdayAt";
 const String NewsletterUpdatedAt = "NewsletterUpdatedAt";
-const String CouldImportNewsletterDialogTitle = "CouldImportNewsletterDialogTitle";
-const String CouldImportNewsletterDialogMessage = "CouldImportNewsletterDialogMessage";
-const String CouldImportNewsletterDialogButtonNewNewsletter = "CouldImportNewsletterDialogButtonNewNewsletter";
-const String CouldImportNewsletterDialogButtonImportNewsletter = "CouldImportNewsletterDialogButtonImportNewsletter";
+const String CouldImportNewsletterDialogTitle =
+    "CouldImportNewsletterDialogTitle";
+const String CouldImportNewsletterDialogMessage =
+    "CouldImportNewsletterDialogMessage";
+const String CouldImportNewsletterDialogButtonNewNewsletter =
+    "CouldImportNewsletterDialogButtonNewNewsletter";
+const String CouldImportNewsletterDialogButtonImportNewsletter =
+    "CouldImportNewsletterDialogButtonImportNewsletter";
 const String UpdateStrategySameUrl = "UpdateStrategy.SameUrl";
 const String UpdateStrategyPatternUrl = "UpdateStrategy.PatternUrl";
 const String UpdateIntervalHourly = "UpdateInterval.Hourly";
@@ -66,16 +84,21 @@ final de = {
   EditNewsletterAutoDownloadArticles: "Neue Beiträge automatisch herunterladen",
   EditNewsletterAutoUpdateArticles: "Automatisch nach neuen Beiträgen suchen",
   EditNewsletterPageTitle: "Newsletter bearbeiten",
-  EditNewsletterUpdateIntervalHelper: "Das Interval, mit dem neue Ausgaben gesucht werden",
+  EditNewsletterUpdateIntervalHelper:
+      "Das Interval, mit dem neue Ausgaben gesucht werden",
   EditNewsletterUpdateIntervalLabel: "Update Interval",
-  EditNewsletterUpdateStrategyHelper: "Gibt an, wie nach neuen Ausgaben gesucht werden soll",
+  EditNewsletterUpdateStrategyHelper:
+      "Gibt an, wie nach neuen Ausgaben gesucht werden soll",
   EditNewsletterUpdateStrategyLabel: "Update Strategie",
   EditNewsletterUrlLabel: "Url",
-  EditNewsletterUrlHelper: "Die Url, wo nach neuen Ausgaben gesucht werden soll",
-  ExportNewsletterDialogMessage: "Der Newsletter wurde in die Zwischenablage kopiert. Du kannst ihn nun per Textnachricht teilen",
+  EditNewsletterUrlHelper:
+      "Die Url, wo nach neuen Ausgaben gesucht werden soll",
+  ExportNewsletterDialogMessage:
+      "Der Newsletter wurde in die Zwischenablage kopiert. Du kannst ihn nun per Textnachricht teilen",
   ExportNewsletterDialogTitle: "Newsletter exportiert",
   ExportNewsletterFailedDialogTitle: "Newsletter nicht exportiert",
-  ExportNewsletterFailedDialogMessage: "Der Newsletter konnte nicht exportiert werden",
+  ExportNewsletterFailedDialogMessage:
+      "Der Newsletter konnte nicht exportiert werden",
   ImportNewsletterButton: "Newsletter importieren",
   ImportNewsletterFailedDialogMessage:
       "Der Newsletter konnte nicht importiert werden. Kopiere zuerst eine Newsletter Nachricht in die Zwischenablage und wiederhole es erneut",
@@ -84,10 +107,14 @@ final de = {
   NewslettersListPageTitle: "Newsletter",
   NoNewslettersEmptyState:
       "Hier gibt es leider noch keine Newsletter zu sehen. Füge einen neuen Newsletter mit + hinzu oder importiere einen Newsletter über die Einstellungen",
-  SettingsNotificationOnNewArticlesDownloaded: "Benachrichtigung, wenn neue Ausgaben heruntergeladen wurden",
-  SettingsNotificationOnNoWifi: "Benachrichtigung, wenn kein WLAN zum herungerladen verfügbar war",
-  SettingsNotificationOnNoNewArticles: "Benachrichtigung, auch wenn keine neuen Ausgaben gefunden wurden",
-  SettingsNotificationOnUpdateError: "Benachrichtigung, wenn die Aktualisierung fehlschlug",
+  SettingsNotificationOnNewArticlesDownloaded:
+      "Benachrichtigung, wenn neue Ausgaben heruntergeladen wurden",
+  SettingsNotificationOnNoWifi:
+      "Benachrichtigung, wenn kein WLAN zum herungerladen verfügbar war",
+  SettingsNotificationOnNoNewArticles:
+      "Benachrichtigung, auch wenn keine neuen Ausgaben gefunden wurden",
+  SettingsNotificationOnUpdateError:
+      "Benachrichtigung, wenn die Aktualisierung fehlschlug",
   SettingsNotificationOnNewArticles: "Benachrichtigung bei neuen Ausgaben",
   SettingsPageTitle: "Einstellungen",
   ArticleMenuDelete: "Beitrag entfernen",
@@ -97,8 +124,8 @@ final de = {
   NewsletterMenuDelete: "Newsletter löschen",
   NewsletterMenuEdit: "Bearbeiten",
   NewsletterMenuExport: "Exportieren",
-  NewsletterUpdatedTodayAt: "Zulezt aktualisiert heute um {0} Uhr",
-  NewsletterUpdatedYesterdayAt: "Zulezt aktualisiert gestern um {0} Uhr",
+  NewsletterUpdatedTodayAt: "Zuletzt aktualisiert heute um {0} Uhr",
+  NewsletterUpdatedYesterdayAt: "Zuletzt aktualisiert gestern um {0} Uhr",
   NewsletterUpdatedAt: "Zuletzt aktualisiert am {0} um {1}",
   CouldImportNewsletterDialogTitle: "Newsletter importieren",
   CouldImportNewsletterDialogMessage:
@@ -132,7 +159,8 @@ final en = {
   EditNewsletterUpdateStrategyLabel: "Update strategy",
   EditNewsletterUrlLabel: "Url",
   EditNewsletterUrlHelper: "The url which is used to search for new articles",
-  ExportNewsletterDialogMessage: "The newsletter was copied to the clipboard. Now you can share it using a text message",
+  ExportNewsletterDialogMessage:
+      "The newsletter was copied to the clipboard. Now you can share it using a text message",
   ExportNewsletterDialogTitle: "Exported newsletter",
   ExportNewsletterFailedDialogTitle: "Newsletter not exported",
   ExportNewsletterFailedDialogMessage: "The newsletter could not be exported",
@@ -142,10 +170,13 @@ final en = {
   ImportNewsletterFailedDialogTitle: "Newsletter not imported",
   ImportNewsletterDialogTitle: "Newsletter imported",
   NewslettersListPageTitle: "Newsletters",
-  NoNewslettersEmptyState: "Currently there are no newsletters. Add a new newsletter using the + or import one in the settings",
+  NoNewslettersEmptyState:
+      "Currently there are no newsletters. Add a new newsletter using the + or import one in the settings",
   SettingsNotificationOnNewArticlesDownloaded: "Notify on new articles",
-  SettingsNotificationOnNoWifi: "Notify when there was no Wifi to download newsletters",
-  SettingsNotificationOnNoNewArticles: "Notify even when no new articles were found",
+  SettingsNotificationOnNoWifi:
+      "Notify when there was no Wifi to download newsletters",
+  SettingsNotificationOnNoNewArticles:
+      "Notify even when no new articles were found",
   SettingsNotificationOnUpdateError: "Notify when the newsletter update failed",
   SettingsNotificationOnNewArticles: "Notify when new newsletters were found",
   SettingsPageTitle: "Settings",
