@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -29,7 +29,7 @@ dependencies:
   path_provider: any
   kiwi: ^0.1.0
   provider: ^3.0.0
-  intl: ^0.15.8
+  intl: ^0.16.0
   http: ^0.12.0+2
   flare_flutter: 1.0.2
   open_file: ^2.0.3
@@ -38,6 +38,7 @@ dependencies:
   background_fetch: ^0.2.0
   connectivity: ^0.4.3+6
   shared_preferences: ^0.5.3+4
+  dio: ^3.0.8
 
 dev_dependencies:
   intl_translation: ^0.17.1

@@ -84,25 +84,6 @@ class NewsletterEntity extends DatabaseEntity {
 
   Newsletter asNewsletter() => _newsletter;
 
-  static String createStatement() {
-    return "CREATE TABLE IF NOT EXISTS " +
-        tableName() +
-        " ("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "name TEXT,"
-            "maxDiskSpaceUntilDelete INTEGER,"
-            "deleteDownloadedBehavior INTEGER,"
-            "durationUntilDelete INTEGER,"
-            "updateInterval INTEGER,"
-            "updateTime INTEGER,"
-            "updateStrategy INTEGER,"
-            "isAutoUpdateEnabled BOOL,"
-            "isAutoDownloadEnabled BOOL,"
-            "url INTEGER,"
-            "lastUpdated INTEGER"
-            ")";
-  }
-
   static String tableName() {
     return "Newsletters";
   }

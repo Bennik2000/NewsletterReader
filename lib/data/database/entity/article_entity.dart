@@ -59,20 +59,4 @@ class ArticleEntity extends DatabaseEntity {
   Article asArticle() => _article;
 
   static String tableName() => "Articles";
-
-  static String createStatement() {
-    return "CREATE TABLE IF NOT EXISTS " +
-        tableName() +
-        " ("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "newsletterId INTEGER,"
-            "releaseDate INTEGER,"
-            "downloadDate INTEGER,"
-            "sourceUrl TEXT,"
-            "storagePath TEXT,"
-            "originalFilename TEXT,"
-            "isDownloaded BOOL,"
-            "thumbnailPath TEXT"
-            ")";
-  }
 }

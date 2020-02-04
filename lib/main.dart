@@ -6,6 +6,8 @@ import 'package:newsletter_reader/ui/app.dart';
 import 'package:newsletter_reader/ui/dependency_injection.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   inject();
 
   await new DatabaseArticleSanitizer(

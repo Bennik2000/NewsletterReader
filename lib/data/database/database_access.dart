@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:newsletter_reader/data/database/entity/article_entity.dart';
-import 'package:newsletter_reader/data/database/entity/newsletter_entity.dart';
+import 'package:newsletter_reader/data/database/sql_scripts.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseAccess {
   static final _databaseName = "Database.db";
-  static final _databaseVersion = 1;
   static Database _databaseInstance;
 
   static final String idColumnName = "id";
@@ -23,12 +21,30 @@ class DatabaseAccess {
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
+
+    return await openDatabase(path,
+        version: SqlScripts.databaseMigrationScripts.length,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade);
   }
 
   Future _onCreate(Database db, int version) async {
-    await db.execute(NewsletterEntity.createStatement());
-    await db.execute(ArticleEntity.createStatement());
+    print("Initializing Database with version: $version");
+
+    await _onUpgrade(db, 1, version);
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    print("Migrating database version: $oldVersion -> $newVersion");
+
+    for (var i = oldVersion; i <= newVersion; i++) {
+      print("   -> Execute migration to $i");
+
+      for(var s in SqlScripts.databaseMigrationScripts[i - 1]){
+        print("   -> $s");
+        await db.execute(s);
+      }
+    }
   }
 
   Future<int> insert(String table, Map<String, dynamic> row) async {
@@ -68,13 +84,15 @@ class DatabaseAccess {
 
   Future<int> queryRowCount(String table) async {
     Database db = await _database;
-    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $table'));
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
 
   Future<int> update(String table, Map<String, dynamic> row) async {
     Database db = await _database;
     int id = row[idColumnName];
-    return await db.update(table, row, where: '$idColumnName = ?', whereArgs: [id]);
+    return await db
+        .update(table, row, where: '$idColumnName = ?', whereArgs: [id]);
   }
 
   Future<int> delete(String table, int id) async {

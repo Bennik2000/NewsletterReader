@@ -1,4 +1,4 @@
-import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
+import 'package:newsletter_reader/data/database/database_access.dart';
 import 'package:newsletter_reader/data/database/entity/article_entity.dart';
 import 'package:newsletter_reader/model/model.dart';
 

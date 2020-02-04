@@ -6,7 +6,7 @@ import 'package:newsletter_reader/business/articles/article_thumbnail_creator.da
 import 'package:newsletter_reader/business/newsletters/newsletter_article_updater.dart';
 import 'package:newsletter_reader/business/notification/notifier.dart';
 import 'package:newsletter_reader/business/pdf/pdf_to_image_renderer.dart';
-import 'package:newsletter_reader/data/database/DatabaseAccess.dart';
+import 'package:newsletter_reader/data/database/database_access.dart';
 import 'package:newsletter_reader/data/filestorage/file_public_repository.dart';
 import 'package:newsletter_reader/data/network/file_downloader.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
