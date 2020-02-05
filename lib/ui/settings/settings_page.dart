@@ -5,7 +5,6 @@ import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 import 'state/settings_state.dart';
-import 'widget/import_newsletter_button.dart';
 
 class SettingsPage extends StatelessWidget {
   final NewsletterListViewModel newsletterListViewModel;
@@ -18,11 +17,6 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(L.of(context).settingsPageTitle),
-          actions: <Widget>[
-            ImportNewsletterButton(
-              newsletterListViewModel: newsletterListViewModel,
-            ),
-          ],
         ),
         body: buildBody(),
       ),
