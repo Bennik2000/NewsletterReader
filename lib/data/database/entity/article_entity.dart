@@ -38,6 +38,7 @@ class ArticleEntity extends DatabaseEntity {
       sourceUrl: map["sourceUrl"],
       storagePath: map["storagePath"],
       thumbnailPath: map["thumbnailPath"],
+      documentEtag: map["etag"]
     );
   }
 
@@ -53,6 +54,7 @@ class ArticleEntity extends DatabaseEntity {
       "originalFilename": _article.originalFilename,
       "isDownloaded": _article.isDownloaded,
       "thumbnailPath": _article.thumbnailPath,
+      "etag": _article.documentEtag
     };
   }
 

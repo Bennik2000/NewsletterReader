@@ -7,6 +7,7 @@ class Article {
   String storagePath;
   String originalFilename;
   String thumbnailPath;
+  String documentEtag;
 
   bool isDownloaded;
 
@@ -20,5 +21,6 @@ class Article {
     this.originalFilename,
     this.thumbnailPath,
     this.isDownloaded,
+    this.documentEtag
   });
 }

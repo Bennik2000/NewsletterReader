@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+
 class HttpUtils {
   static String formatDateForHeader(DateTime date) {
     DateTime utc = date.toUtc();
@@ -80,7 +84,7 @@ class HttpUtils {
     return null;
   }
 
-  static String getFilenameOfResponseHeaders(Map<String, String> headers) {
+  static String getFilenameOfResponseHeader(Map<String, String> headers) {
     if (headers.containsKey("content-disposition")) {
       var contentDisposition = headers["content-disposition"];
 
@@ -94,4 +98,86 @@ class HttpUtils {
 
     return null;
   }
+
+  static getEtagOrNull(Map<String, String> headers) {
+    if (headers.containsKey(HttpHeaders.etagHeader)) {
+      return headers[HttpHeaders.etagHeader];
+    }
+
+    return null;
+  }
+
+}
+
+
+class HttpRequestHelper{
+  final String url;
+  Map<String, String> _headers;
+
+  HttpRequestHelper(this.url);
+
+  HttpRequestHelper withHeaders(Map<String, String> headers){
+    _headers = headers;
+
+    return this;
+  }
+
+  Future<HttpResponse> doGetRequest() async {
+    try {
+      var response = await Dio().get(
+        url,
+        options: Options(
+          headers: _headers,
+        ),
+      );
+
+      return HttpResponse(
+        response.statusCode,
+        _dioHeadersToMap(response),
+        true
+      );
+    } on DioError catch (e) {
+      if (e.response != null) {
+
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx and is also not 304.
+
+        return HttpResponse(
+            e.response.statusCode,
+            _dioHeadersToMap(e.response),
+            false
+        );
+      } else {
+        // Something else went wrong
+
+        return HttpResponse(null, null, false);
+      }
+    }
+  }
+
+  static Map<String, String> _dioHeadersToMap(Response response){
+    Map<String, String> headers = {};
+
+    for (var header in response.headers.map.entries) {
+      String value = "";
+
+      for (var v in header.value) {
+        value += v + " ";
+      }
+
+      headers.addAll({header.key: value});
+    }
+
+    return headers;
+  }
+}
+
+
+class HttpResponse {
+  final int statusCode;
+  final Map<String, String> headers;
+  final bool success;
+  bool get failed => !success;
+
+  HttpResponse(this.statusCode, this.headers, this.success);
 }

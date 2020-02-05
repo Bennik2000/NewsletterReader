@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
 import 'package:newsletter_reader/business/util/date_template_filler.dart';
 import 'package:newsletter_reader/business/util/string_template_filler.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
@@ -10,6 +9,10 @@ import 'package:newsletter_reader/util/util.dart';
 import 'article_searcher.dart';
 import 'http_utils.dart';
 
+///
+/// This ArticleSearcher searches for new articles based on a url pattern. The
+/// Url pattern can contain the current date and an increasing number
+///
 class PatternUrlArticleSearcher extends ArticleSearcher {
   final Newsletter _newsletter;
   final ArticleRepository _articleRepository;
@@ -26,10 +29,12 @@ class PatternUrlArticleSearcher extends ArticleSearcher {
       throw new InvalidArgumentException();
     }
 
-    var newsletterArticles = await _articleRepository.queryArticlesOfNewsletter(_newsletter.id);
+    var newsletterArticles =
+        await _articleRepository.queryArticlesOfNewsletter(_newsletter.id);
 
     var newArticles = <Article>[];
 
+    // This implements a fail counter to allow gaps between the article urls
     var counter = 0;
     var failCounter = _initialFailCounter;
 
@@ -39,22 +44,33 @@ class PatternUrlArticleSearcher extends ArticleSearcher {
       if (newsletterArticles.any((a) => a.sourceUrl == url)) continue;
 
       var headers = {
-        "If-Modified-Since": HttpUtils.formatDateForHeader(DateTime.now()),
+        HttpHeaders.ifModifiedSinceHeader:
+            HttpUtils.formatDateForHeader(DateTime.now()),
       };
 
-      var response = await http.get(url, headers: headers);
+      var response =
+          await HttpRequestHelper(url).withHeaders(headers).doGetRequest();
 
-      if (response.statusCode == HttpStatus.ok || response.statusCode == HttpStatus.notModified) {
-        var date = HttpUtils.getCreationDateOrNull(response.headers) ?? DateTime.now();
+      if (response.statusCode == HttpStatus.ok ||
+          response.statusCode == HttpStatus.notModified) {
 
-        newArticles.add(new Article(
+        var etag = HttpUtils.getEtagOrNull(headers);
+        var filename = HttpUtils.getFilenameOfResponseHeader(response.headers);
+        var date =
+            HttpUtils.getCreationDateOrNull(response.headers) ?? DateTime.now();
+
+        var article = new Article(
             releaseDate: date,
             sourceUrl: url,
             newsletterId: _newsletter.id,
-            originalFilename: HttpUtils.getFilenameOfResponseHeaders(response.headers)));
+            originalFilename: filename,
+            documentEtag: etag);
+
+        newArticles.add(article);
 
         failCounter = _initialFailCounter;
       } else if (--failCounter == 0) {
+        // Break after n failed request
         break;
       }
     }

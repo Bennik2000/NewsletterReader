@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:http/http.dart' as http;
 import 'package:newsletter_reader/data/network/article_searcher.dart';
 import 'package:newsletter_reader/data/repository/article_repository.dart';
 import 'package:newsletter_reader/model/model.dart';
@@ -20,32 +18,62 @@ class SameUrlArticleSearcher extends ArticleSearcher {
       throw new InvalidArgumentException();
     }
 
-    Map<String, String> headers = {};
+    var article =
+        await _articleRepository.queryLastArticleOfNewsletter(_newsletter.id);
 
-    var article = await _articleRepository.queryLastArticleOfNewsletter(_newsletter.id);
-    if (article?.releaseDate != null) {
-      headers.addAll({"If-Modified-Since": HttpUtils.formatDateForHeader(article.releaseDate)});
-    }
+    var headers = _createRequestConditionalHeaders(article);
 
-    var response = await http.get(
-      // TODO: Use lower level http api. Now the complete article is downloaded only to test if a new article ist available.
-      _newsletter.url,
-      headers: headers,
-    );
+    var response = await HttpRequestHelper(_newsletter.url)
+        .withHeaders(headers)
+        .doGetRequest();
 
-    if (response.statusCode == HttpStatus.ok) {
-      var date = HttpUtils.getCreationDateOrNull(response.headers) ?? DateTime.now();
+    // There is no new article if the request failed or the code was not ok (200)
+    if(response.failed || response.statusCode != HttpStatus.ok) return [];
 
-      var article = new Article(
+    var date = HttpUtils.getCreationDateOrNull(response.headers) ?? DateTime.now();
+
+    // Decide if the article is newer
+    if (article == null ||
+        article.releaseDate == null ||
+        article.releaseDate.isBefore(date)) {
+
+      var filename = HttpUtils.getFilenameOfResponseHeader(response.headers);
+      var etag = HttpUtils.getEtagOrNull(response.headers);
+
+      var newArticle = new Article(
           isDownloaded: false,
           sourceUrl: _newsletter.url.toString(),
           newsletterId: _newsletter.id,
-          originalFilename: HttpUtils.getFilenameOfResponseHeaders(response.headers),
-          releaseDate: date);
+          originalFilename: filename,
+          releaseDate: date,
+          documentEtag: etag);
 
-      return [article];
+      return [newArticle];
     }
 
     return [];
+  }
+
+  Map<String, String> _createRequestConditionalHeaders(
+    Article article,
+  ) {
+    if (article == null) return Map<String, String>();
+
+    Map<String, String> headers = {};
+
+    if (article.documentEtag != null) {
+      headers.addAll({
+        HttpHeaders.ifNoneMatchHeader: article.documentEtag,
+      });
+    }
+
+    if (article.releaseDate != null) {
+      headers.addAll({
+        HttpHeaders.ifModifiedSinceHeader:
+            HttpUtils.formatDateForHeader(article.releaseDate),
+      });
+    }
+
+    return headers;
   }
 }
