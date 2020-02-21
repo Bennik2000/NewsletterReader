@@ -36,7 +36,9 @@ class NewsletterListPage extends StatelessWidget {
         title: Text(L.of(context).newslettersListPageTitle),
         actions: <Widget>[
           Consumer(
-            builder: (BuildContext context, NewsletterListViewModel viewModel, Widget child) => IconButton(
+            builder: (BuildContext context, NewsletterListViewModel viewModel,
+                    Widget child) =>
+                IconButton(
               icon: Icon(Icons.settings),
               onPressed: () async {
                 onSettingsClicked();
@@ -52,7 +54,8 @@ class NewsletterListPage extends StatelessWidget {
         showAsCards: showAsCards,
       ),
       floatingActionButton: Consumer(
-        builder: (BuildContext context, NewsletterListViewModel state, _) => FloatingActionButton(
+        builder: (BuildContext context, NewsletterListViewModel state, _) =>
+            FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
             await onNewNewsletterPressed(context, state);
@@ -62,10 +65,15 @@ class NewsletterListPage extends StatelessWidget {
     );
   }
 
-  Future onNewNewsletterPressed(BuildContext context, NewsletterListViewModel state) async {
+  Future onNewNewsletterPressed(
+      BuildContext context, NewsletterListViewModel state) async {
     var newsletterImport = new NewsletterImport(kiwi.Container().resolve());
 
-    bool canImportNewsletter = await newsletterImport.getCanImportNewsletter();
+    bool canImportNewsletter = false;
+
+    try {
+      canImportNewsletter = await newsletterImport.getCanImportNewsletter();
+    } catch (e) {}
 
     if (canImportNewsletter) {
       await showDialog(
@@ -74,8 +82,10 @@ class NewsletterListPage extends StatelessWidget {
           context,
           L.of(context).couldImportNewsletterDialogTitle,
           message: L.of(context).couldImportNewsletterDialogMessage,
-          cancelText: L.of(context).couldImportNewsletterDialogButtonNewNewsletter,
-          okText: L.of(context).couldImportNewsletterDialogButtonImportNewsletter,
+          cancelText:
+              L.of(context).couldImportNewsletterDialogButtonNewNewsletter,
+          okText:
+              L.of(context).couldImportNewsletterDialogButtonImportNewsletter,
           okAction: () async {
             await newsletterImport.importNewsletter();
             await state.loadNewsletters();
@@ -90,8 +100,10 @@ class NewsletterListPage extends StatelessWidget {
     }
   }
 
-  Future showNewNewsletterPage(BuildContext context, NewsletterListViewModel state) async {
-    var viewModel = new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
+  Future showNewNewsletterPage(
+      BuildContext context, NewsletterListViewModel state) async {
+    var viewModel =
+        new NewsletterViewModel(new Newsletter(), null, null, null, null, null);
 
     await Navigator.of(context).push(
       new MaterialPageRoute(
