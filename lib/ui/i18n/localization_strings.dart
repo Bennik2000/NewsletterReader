@@ -22,6 +22,8 @@ const String EditNewsletterUpdateStrategyLabel =
     "EditNewsletterUpdateStrategyLabel";
 const String EditNewsletterUrlLabel = "EditNewsletterUrlLabel";
 const String EditNewsletterUrlHelper = "EditNewsletterUrlHelper";
+const String DeleteNewsletterDialogMessage = "DeleteNewsletterDialogMessage";
+const String DeleteNewsletterDialogTitle = "DeleteNewsletterDialogTitle";
 const String ExportNewsletterDialogMessage = "ExportNewsletterDialogMessage";
 const String ExportNewsletterDialogTitle = "ExportNewsletterDialogTitle";
 const String ExportNewsletterFailedDialogTitle =
@@ -93,6 +95,8 @@ final de = {
   EditNewsletterUrlLabel: "Url",
   EditNewsletterUrlHelper:
       "Die Url, wo nach neuen Ausgaben gesucht werden soll",
+  DeleteNewsletterDialogTitle: "{0} löschen",
+  DeleteNewsletterDialogMessage: "Der Newsletter {0} wird endgültig gelöscht.",
   ExportNewsletterDialogMessage:
       "Der Newsletter wurde in die Zwischenablage kopiert. Du kannst ihn nun per Textnachricht teilen",
   ExportNewsletterDialogTitle: "Newsletter exportiert",
@@ -159,6 +163,8 @@ final en = {
   EditNewsletterUpdateStrategyLabel: "Update strategy",
   EditNewsletterUrlLabel: "Url",
   EditNewsletterUrlHelper: "The url which is used to search for new articles",
+  DeleteNewsletterDialogTitle: "Delete {0}",
+  DeleteNewsletterDialogMessage: "The newsletter {0} will be deleted forever.",
   ExportNewsletterDialogMessage:
       "The newsletter was copied to the clipboard. Now you can share it using a text message",
   ExportNewsletterDialogTitle: "Exported newsletter",

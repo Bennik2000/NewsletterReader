@@ -4,6 +4,7 @@ import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/main_page/main_page.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
+import 'package:newsletter_reader/util/string_format.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/newsletter_card.dart';
@@ -29,12 +30,14 @@ class NewsletterList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, NewsletterListViewModel listViewModel, Widget child) {
+      builder: (BuildContext context, NewsletterListViewModel listViewModel,
+          Widget child) {
         if (listViewModel.isLoading) {
           return NewsletterLoadingIndicator();
         }
 
-        List<NewsletterViewModel> newsletters = listViewModel.newsletters ?? <NewsletterViewModel>[];
+        List<NewsletterViewModel> newsletters =
+            listViewModel.newsletters ?? <NewsletterViewModel>[];
 
         if (newsletters.isEmpty) {
           return NewslettersEmptyState();
@@ -47,7 +50,9 @@ class NewsletterList extends StatelessWidget {
 
   Widget buildNewsletterList(NewsletterListViewModel listViewModel) {
     return Consumer(
-      builder: (BuildContext context, MasterDetailViewModel masterDetailViewModel, Widget child) => ListView.separated(
+      builder: (BuildContext context,
+              MasterDetailViewModel masterDetailViewModel, Widget child) =>
+          ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           return NewsletterCardWidget(
             showAsCard: showAsCards,
@@ -126,8 +131,11 @@ class NewsletterList extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) => createAlertDialog(
                     context,
-                    "${newsletter.newsletter.name} löschen",
-                    message: "Der Newsletter ${newsletter.newsletter.name} wird endgültig gelöscht.",
+                    stringFormat(L.of(context).deleteNewsletterDialogTitle,
+                        [newsletter.newsletter.name]),
+                    message: stringFormat(
+                        L.of(context).deleteNewsletterDialogMessage,
+                        [newsletter.newsletter.name]),
                     okAction: () async {
                       await listViewModel.deleteNewsletter(newsletter);
 
@@ -145,8 +153,10 @@ class NewsletterList extends StatelessWidget {
     );
   }
 
-  Future onExportNewsletterClick(NewsletterViewModel newsletter, BuildContext context) async {
-    var result = await new NewsletterExport(newsletter.newsletter).exportNewsletter();
+  Future onExportNewsletterClick(
+      NewsletterViewModel newsletter, BuildContext context) async {
+    var result =
+        await new NewsletterExport(newsletter.newsletter).exportNewsletter();
 
     if (result) {
       await showDialog(
