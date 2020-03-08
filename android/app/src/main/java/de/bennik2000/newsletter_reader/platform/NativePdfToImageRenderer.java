@@ -44,14 +44,4 @@ public class NativePdfToImageRenderer {
 
         result.success(null);
     }
-
-    public void registerMethodChannel(BinaryMessenger messenger) {
-        new MethodChannel(messenger, "")
-                .setMethodCallHandler(
-                        (call, result) -> {
-                            if (call.method.equals("renderPdfToImage")) {
-                                renderPdfToImage(call, result);
-                            }
-                        });
-    }
 }

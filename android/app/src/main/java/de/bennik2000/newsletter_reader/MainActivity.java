@@ -13,10 +13,7 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
 
-    Log.d("NewsletterReader", "Registering native");
-
-    ((Application) getApplication()).nativePdfToImageRenderer.setupMethodChannel(
-            registrarFor("de.bennik2000.newsletter_reader").messenger()
-    );
+    ((Application) getApplication()).registerMethodChannels(
+            registrarFor("de.bennik2000.newsletter_reader").messenger());
   }
 }
