@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/ui/i18n/localizations.dart';
+import 'package:newsletter_reader/ui/style/text_style.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -46,13 +47,13 @@ class NewsletterArticlesContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: Consumer(
-            builder: (BuildContext context, NewsletterViewModel value, Widget child) => Opacity(
+            builder: (BuildContext context, NewsletterViewModel value,
+                    Widget child) =>
+                Opacity(
               opacity: value.error != null ? 1 : 0,
               child: Text(
                 value.error ?? "",
-                style: TextStyle(
-                  color: Theme.of(context).errorColor,
-                ),
+                style: TextStyles(context).textError(),
               ),
             ),
           ),
@@ -60,7 +61,9 @@ class NewsletterArticlesContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: Consumer(
-            builder: (BuildContext context, NewsletterViewModel value, Widget child) => Opacity(
+            builder: (BuildContext context, NewsletterViewModel value,
+                    Widget child) =>
+                Opacity(
               opacity: (value.isUpdating) ? 1 : 0,
               child: LinearProgressIndicator(),
             ),
@@ -77,9 +80,13 @@ class NewsletterArticlesContent extends StatelessWidget {
           builder: (BuildContext context, NewsletterViewModel state, _) {
             Widget widget;
 
-            if (!state.isLoading && state.articles != null && state.articles.isEmpty) {
+            if (!state.isLoading &&
+                state.articles != null &&
+                state.articles.isEmpty) {
               widget = NoArticlesEmptyState();
-            } else if (!state.isLoading && state.articles != null && state.articles.isNotEmpty) {
+            } else if (!state.isLoading &&
+                state.articles != null &&
+                state.articles.isNotEmpty) {
               widget = ArticlesList();
             } else {
               widget = Container();

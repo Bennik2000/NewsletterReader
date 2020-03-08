@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newsletter_reader/ui/i18n/localizations.dart';
+import 'package:newsletter_reader/ui/style/text_style.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,8 @@ class ArticleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, ArticleViewModel state, Widget child) => buildCard(context, state),
+      builder: (BuildContext context, ArticleViewModel state, Widget child) =>
+          buildCard(context, state),
     );
   }
 
@@ -27,6 +29,7 @@ class ArticleCard extends StatelessWidget {
       image = ArticleThumbnail(
         borderRadius: borderRadius,
         thumbnailPath: state.article.thumbnailPath,
+        fadeOutBottom: true,
       );
     } else {
       image = Padding(
@@ -64,7 +67,8 @@ class ArticleCard extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(borderRadius)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusDirectional.circular(borderRadius)),
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
         onTap: () async {
@@ -89,7 +93,8 @@ class ArticleCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 0, 24),
                       child: Text(
-                        DateFormat.yMMMEd(L.of(context).locale.languageCode).format(state.article.releaseDate),
+                        DateFormat.yMMMEd(L.of(context).locale.languageCode)
+                            .format(state.article.releaseDate),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -104,7 +109,8 @@ class ArticleCard extends StatelessWidget {
     );
   }
 
-  Future articleLongPress(ArticleViewModel article, BuildContext context) async {
+  Future articleLongPress(
+      ArticleViewModel article, BuildContext context) async {
     await showModalBottomSheet(
       builder: (BuildContext context) {
         var buttons = <Widget>[];
@@ -141,10 +147,11 @@ class ArticleCard extends StatelessWidget {
           color: Theme.of(context).dividerColor,
         ));
         buttons.add(new ListTile(
-          leading: new Icon(Icons.delete_forever, color: Theme.of(context).errorColor),
+          leading: new Icon(Icons.delete_forever,
+              color: Theme.of(context).errorColor),
           title: new Text(
             L.of(context).articleMenuDelete,
-            style: TextStyle(color: Theme.of(context).errorColor),
+            style: TextStyles(context).textError(),
           ),
           onTap: () async {
             Navigator.of(context).pop();

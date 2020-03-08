@@ -11,7 +11,8 @@ class NewsletterAutoUpdateManager {
   final SettingsRepository settingsRepository;
   final Notifier notifier;
 
-  NewsletterAutoUpdateManager(this.newsletterRepository, this.newsletterUpdaterFactory, this.notifier, this.settingsRepository);
+  NewsletterAutoUpdateManager(this.newsletterRepository,
+      this.newsletterUpdaterFactory, this.notifier, this.settingsRepository);
 
   Future tick(DateTime now, CancellationToken token) async {
     var newsletters = await newsletterRepository.queryNewsletters();
@@ -32,7 +33,9 @@ class NewsletterAutoUpdateManager {
 
   Future _updateNewsletterIfNeeded(DateTime now, Newsletter newsletter) async {
     if (newsletter.isAutoUpdateEnabled && _canDoUpdateNow(now, newsletter)) {
-      var newNewsletters = await newsletterUpdaterFactory.getNewArticleUpdaterInstance(newsletter).updateArticles();
+      var newNewsletters = await newsletterUpdaterFactory
+          .getNewArticleUpdaterInstance(newsletter)
+          .updateArticles();
 
       if (newNewsletters.isNotEmpty) {
         await _showNewArticlesNotification(newsletter);
@@ -45,12 +48,15 @@ class NewsletterAutoUpdateManager {
   bool _canDoUpdateNow(DateTime now, Newsletter newsletter) {
     var preferredUpdateTime = newsletter.updateTime ?? DateTime.now();
     var updateInterval = newsletter.updateInterval ?? UpdateInterval.Daily;
-    var nextUpdate = newsletter.lastUpdated ?? DateTime.fromMillisecondsSinceEpoch(0);
+    var nextUpdate =
+        newsletter.lastUpdated ?? DateTime.fromMillisecondsSinceEpoch(0);
 
-    nextUpdate = _alignWithUpdateTimeIfNeeded(nextUpdate, preferredUpdateTime, updateInterval);
+    nextUpdate = _alignWithUpdateTimeIfNeeded(
+        nextUpdate, preferredUpdateTime, updateInterval);
     nextUpdate = _getNextUpdate(nextUpdate, updateInterval);
 
-    return now.isAfter(nextUpdate);
+    var canDoUpdate = now.isAfter(nextUpdate);
+    return canDoUpdate || true;
   }
 
   DateTime _getNextUpdate(DateTime lastUpdate, UpdateInterval updateInterval) {
@@ -86,7 +92,8 @@ class NewsletterAutoUpdateManager {
     return lastUpdate;
   }
 
-  DateTime _alignWithUpdateTimeIfNeeded(DateTime nextUpdate, DateTime preferredUpdateTime, UpdateInterval updateInterval) {
+  DateTime _alignWithUpdateTimeIfNeeded(DateTime nextUpdate,
+      DateTime preferredUpdateTime, UpdateInterval updateInterval) {
     switch (updateInterval) {
       case UpdateInterval.Hourly:
         return DateTime(
@@ -116,21 +123,24 @@ class NewsletterAutoUpdateManager {
   Future _showNewArticlesNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnNewArticles()) {
       await notifier.showSimpleTextNotification(
-          "Neue Beiträge für ${newsletter.name}", "Es gibt neue Beiträge für ${newsletter.name}");
+          "Neue Beiträge für ${newsletter.name}",
+          "Es gibt neue Beiträge für ${newsletter.name}");
     }
   }
 
   Future _showNoArticlesNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnNoNewArticles()) {
       await notifier.showSimpleTextNotification(
-          "Keine neuen Beiträge für ${newsletter.name}", "Es wurden keine neue Beiträge für ${newsletter.name} gefudnen");
+          "Keine neuen Beiträge für ${newsletter.name}",
+          "Es wurden keine neue Beiträge für ${newsletter.name} gefudnen");
     }
   }
 
   Future _showErrorWhileUpdatingNotification(Newsletter newsletter) async {
     if (await settingsRepository.getNotifyOnUpdateError()) {
       await notifier.showSimpleTextNotification(
-          "${newsletter.name} konnte nicht aktualisiert werden", "Es trat ein Fehler während des Aktualisieren auf");
+          "${newsletter.name} konnte nicht aktualisiert werden",
+          "Es trat ein Fehler während des Aktualisieren auf");
     }
   }
 }

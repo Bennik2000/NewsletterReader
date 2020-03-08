@@ -6,8 +6,14 @@ import 'package:flutter/material.dart';
 class ArticleThumbnail extends StatelessWidget {
   final double borderRadius;
   final String thumbnailPath;
+  final bool fadeOutBottom;
 
-  const ArticleThumbnail({Key key, this.borderRadius, this.thumbnailPath}) : super(key: key);
+  const ArticleThumbnail({
+    Key key,
+    this.borderRadius,
+    this.thumbnailPath,
+    this.fadeOutBottom,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +28,7 @@ class ArticleThumbnail extends StatelessWidget {
             child: Ink.image(
               image: FileImage(File.fromUri(Uri.file(thumbnailPath))),
               child: Container(),
+              fit: BoxFit.contain,
             ),
           ),
         ),
@@ -32,19 +39,21 @@ class ArticleThumbnail extends StatelessWidget {
           right: 0,
           child: Ink(
             child: Container(),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              gradient: LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                colors: [
-                  Theme.of(context).cardColor.withOpacity(0),
-                  Theme.of(context).cardColor.withOpacity(0),
-                  Theme.of(context).cardColor,
-                ],
-                stops: [0.0, 0.50, 0.80],
-              ),
-            ),
+            decoration: fadeOutBottom ?? false
+                ? BoxDecoration(
+                    color: Colors.white,
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Theme.of(context).cardColor.withOpacity(0),
+                        Theme.of(context).cardColor.withOpacity(0),
+                        Theme.of(context).cardColor,
+                      ],
+                      stops: [0.0, 0.50, 0.80],
+                    ),
+                  )
+                : null,
           ),
         )
       ],

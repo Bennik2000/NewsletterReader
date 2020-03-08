@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newsletter_reader/business/newsletters/newsletter_export.dart';
 import 'package:newsletter_reader/ui/i18n/localizations.dart';
 import 'package:newsletter_reader/ui/main_page/main_page.dart';
+import 'package:newsletter_reader/ui/style/text_style.dart';
 import 'package:newsletter_reader/ui/utils/dialog_utils.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:newsletter_reader/util/string_format.dart';
@@ -120,9 +121,7 @@ class NewsletterList extends StatelessWidget {
               ),
               title: new Text(
                 L.of(context).newsletterMenuDelete,
-                style: TextStyle(
-                  color: Theme.of(context).errorColor,
-                ),
+                style: TextStyles(context).textError(),
               ),
               onTap: () async {
                 Navigator.of(context).pop();

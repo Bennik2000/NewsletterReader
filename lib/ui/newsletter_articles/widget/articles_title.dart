@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsletter_reader/ui/style/text_style.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 
 class ArticlesTitle extends StatelessWidget {
@@ -27,10 +28,7 @@ class ArticlesTitle extends StatelessWidget {
                 fit: FlexFit.loose,
                 child: Text(
                   newsletter.newsletter.name,
-                  style: TextStyle(
-                    fontSize: 35,
-                    color: Theme.of(context).primaryTextTheme.title.color,
-                  ),
+                  style: TextStyles(context).pageTitle(),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

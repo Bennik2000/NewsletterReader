@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsletter_reader/model/model.dart';
 import 'package:newsletter_reader/ui/i18n/localizations.dart';
+import 'package:newsletter_reader/ui/style/text_style.dart';
 import 'package:newsletter_reader/ui/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -12,12 +13,15 @@ class NewsletterEditContent extends StatefulWidget {
   const NewsletterEditContent({Key key, this.newsletter}) : super(key: key);
 
   @override
-  _NewsletterEditContentState createState() => _NewsletterEditContentState(newsletter);
+  _NewsletterEditContentState createState() =>
+      _NewsletterEditContentState(newsletter);
 }
 
 class _NewsletterEditContentState extends State<NewsletterEditContent> {
-  final TextEditingController _nameTextEditingController = new TextEditingController();
-  final TextEditingController _urlTextEditingController = new TextEditingController();
+  final TextEditingController _nameTextEditingController =
+      new TextEditingController();
+  final TextEditingController _urlTextEditingController =
+      new TextEditingController();
 
   final NewsletterViewModel _newsletter;
 
@@ -35,7 +39,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Consumer(
-              builder: (BuildContext context, NewsletterEditViewModel state, _) => TextField(
+              builder:
+                  (BuildContext context, NewsletterEditViewModel state, _) =>
+                      TextField(
                 decoration: InputDecoration(
                   hintText: L.of(context).editNewsletterNameHint,
                   errorText: state?.nameError,
@@ -45,7 +51,7 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                 onChanged: (String value) {
                   state.name = value;
                 },
-                style: TextStyle(fontSize: 30),
+                style: TextStyles(context).textFieldBig(),
               ),
             ),
             SizedBox(
@@ -53,7 +59,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
             ),
             Padding(
               child: Consumer(
-                builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
+                builder:
+                    (BuildContext context, NewsletterEditViewModel state, _) =>
+                        InputDecorator(
                   child: DropdownButton(
                     isExpanded: true,
                     items: getUpdateStrategyMenuItems(context),
@@ -66,7 +74,8 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                   ),
                   decoration: InputDecoration(
                     labelText: L.of(context).editNewsletterUpdateStrategyLabel,
-                    helperText: L.of(context).editNewsletterUpdateStrategyHelper,
+                    helperText:
+                        L.of(context).editNewsletterUpdateStrategyHelper,
                     errorText: state.updateStrategyError,
                   ),
                 ),
@@ -77,7 +86,8 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
               height: 16,
             ),
             Consumer(
-              builder: (BuildContext context, NewsletterEditViewModel state, _) {
+              builder:
+                  (BuildContext context, NewsletterEditViewModel state, _) {
                 return TextField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.insert_link),
@@ -105,7 +115,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
               child: Row(
                 children: <Widget>[
                   Consumer(
-                    builder: (BuildContext context, NewsletterEditViewModel state, _) => Checkbox(
+                    builder: (BuildContext context,
+                            NewsletterEditViewModel state, _) =>
+                        Checkbox(
                       onChanged: (isChecked) {
                         state.autoUpdateEnabled = isChecked;
                       },
@@ -122,7 +134,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
               ),
             ),
             Consumer(
-              builder: (BuildContext context, NewsletterEditViewModel state, _) => AnimatedSwitcher(
+              builder:
+                  (BuildContext context, NewsletterEditViewModel state, _) =>
+                      AnimatedSwitcher(
                 child: state.autoUpdateEnabled ?? false
                     ? Column(
                         children: <Widget>[
@@ -131,7 +145,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                             child: Row(
                               children: <Widget>[
                                 Consumer(
-                                  builder: (BuildContext context, NewsletterEditViewModel state, _) => Checkbox(
+                                  builder: (BuildContext context,
+                                          NewsletterEditViewModel state, _) =>
+                                      Checkbox(
                                     onChanged: (isChecked) {
                                       state.autoDownloadEnabled = isChecked;
                                     },
@@ -140,7 +156,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    L.of(context).editNewsletterAutoDownloadArticles,
+                                    L
+                                        .of(context)
+                                        .editNewsletterAutoDownloadArticles,
                                     overflow: TextOverflow.clip,
                                   ),
                                 ),
@@ -148,7 +166,9 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                             ),
                           ),
                           Consumer(
-                            builder: (BuildContext context, NewsletterEditViewModel state, _) => InputDecorator(
+                            builder: (BuildContext context,
+                                    NewsletterEditViewModel state, _) =>
+                                InputDecorator(
                               child: DropdownButton(
                                 isExpanded: true,
                                 items: getUpdateIntervalMenuItems(context),
@@ -161,8 +181,12 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
                               ),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.watch_later),
-                                labelText: L.of(context).editNewsletterUpdateIntervalLabel,
-                                helperText: L.of(context).editNewsletterUpdateIntervalHelper,
+                                labelText: L
+                                    .of(context)
+                                    .editNewsletterUpdateIntervalLabel,
+                                helperText: L
+                                    .of(context)
+                                    .editNewsletterUpdateIntervalHelper,
                                 errorText: state.updateIntervalError,
                               ),
                             ),
@@ -182,15 +206,20 @@ class _NewsletterEditContentState extends State<NewsletterEditContent> {
     );
   }
 
-  List<DropdownMenuItem<UpdateInterval>> getUpdateIntervalMenuItems(BuildContext context) {
+  List<DropdownMenuItem<UpdateInterval>> getUpdateIntervalMenuItems(
+      BuildContext context) {
     return UpdateInterval.values
-        .map((code) => new DropdownMenuItem(value: code, child: new Text(L.of(context).getValue(code.toString()))))
+        .map((code) => new DropdownMenuItem(
+            value: code,
+            child: new Text(L.of(context).getValue(code.toString()))))
         .toList();
   }
 
   List<DropdownMenuItem> getUpdateStrategyMenuItems(BuildContext context) {
     return UpdateStrategy.values
-        .map((code) => new DropdownMenuItem(value: code, child: new Text(L.of(context).getValue(code.toString()))))
+        .map((code) => new DropdownMenuItem(
+            value: code,
+            child: new Text(L.of(context).getValue(code.toString()))))
         .toList();
   }
 }
